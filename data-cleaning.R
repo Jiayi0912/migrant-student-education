@@ -41,3 +41,42 @@ summary(cepsw2.st.nonmig$w2cog3pl)
 summary(cepsw2.st.nonmig$w2chnpct)
 summary(cepsw2.st.nonmig$w2matpct)
 summary(cepsw2.st.nonmig$w2engpct)
+
+## import w2 school data (principle data)
+cepsw2.pr <- read_dta("./cepsw2data/cepsw2principalEN.dta")
+cepsw2.pr.orig <- cepsw2.pr
+
+## investigate w2 school data
+# rename variables of interests
+cepsw2.pr.orig <- cepsw2.pr.orig %>% 
+  rename(per_st_funding = w2pla15, 
+         mig_funding = w2pla16, 
+         centgov_fund_pct= w2pla1701,
+         prefgov_fund_pct = w2pla1702,
+         countgov_fund_pct = w2pla1703,
+         stucharge_pct = w2pla1704,
+         same_charge_std = w2pld0200,
+         mig_subsidy = w2pld0405) 
+summary(cepsw2.pr.orig$per_st_funding)
+summary(cepsw2.pr.orig$centgov_fund_pct)
+summary(cepsw2.pr.orig$prefgov_fund_pct)
+summary(cepsw2.pr.orig$countgov_fund_pct)
+summary(cepsw2.pr.orig$stucharge_pct)
+
+tabulate(cepsw2.pr.orig$mig_funding)
+tabulate(cepsw2.pr.orig$same_charge_std)
+tabulate(cepsw2.pr.orig$mig_subsidy)
+
+## import w2 parents data
+cepsw2.pa <- read_dta("./cepsw2data/cepsw2parentEN.dta")
+cepsw2.pa.orig <- cepsw2.pa
+
+## rename variables
+cepsw2.pa.orig <- cepsw2.pa.orig %>% 
+  rename(mig_status = w2bd01,
+         mig_local_adm = w2bc07,
+         mig_local_quali = w2bc0800) 
+
+cepsw2.pa.mig <- cepsw2.pa.orig %>% filter(mig_status == 2)
+tabulate(cepsw2.pa.mig$mig_local_adm)
+tabulate(cepsw2.pa.mig$mig_local_quali)
