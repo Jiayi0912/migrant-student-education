@@ -80,3 +80,23 @@ cepsw2.pa.orig <- cepsw2.pa.orig %>%
 cepsw2.pa.mig <- cepsw2.pa.orig %>% filter(mig_status == 2)
 tabulate(cepsw2.pa.mig$mig_local_adm)
 tabulate(cepsw2.pa.mig$mig_local_quali)
+
+## wrangling data
+# merge w2 parent data with w2 student data
+cepsw2.join.stpa <- cepsw2.st.orig %>%
+  left_join(cepsw2.st.orig, cepsw2.pa.orig, by = c("ids", "clsids", "w2clsids", "schids", "ctyids"))
+# merge w2 school data with `cepsw2.join.stpa`
+cepsw2.join <- cepsw2.join.stpa %>%
+  left_join(cepsw2.pr.orig, by = c("schids", "ctyids"))
+
+## select variables that account
+cepsw2.wrangled <- cepsw2.join %>% 
+  rename(fam_fin = w2be23,
+         fam_edu = w2be08,
+         fam_ocp = w2be09
+) %>%
+  select(
+  ids, clsids, w2clsids, schids, ctyids, mig_status, w2cog3pl, w2chnpct, w2matpct, w2engpct, 
+  per_st_funding, mig_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct, stucharge_pct, 
+  same_charge_std, mig_subsidy, mig_local_adm, mig_local_quali, fam_fin, fam_edu, fam_ocp
+)
