@@ -17,25 +17,20 @@ author:
 author-note:
   disclosures:
     # Example: This article is based on the dissertation completed by [citation].  
-    related-report: This project is the final assignment of Data to Manuscript in R (D2MR) instructed by Dr. Natalie Dowling. It also serves as an interim result of Jiayi Zou's MA thesis project. 
+    related-report: This project is the final assignment for Data to Manuscript in R (D2MR) instructed by Dr. Natalie Dowling. It also serves as an interim result of Jiayi Zou's MA thesis project. 
     # Example: The authors are grateful to [Person] for [Reason].
     gratitude: The author is grateful Dr. Dowling for supporting this project and offering guidance throughout the quarter.
 abstract: "This document is a template demonstrating the apaquarto format. It includes examples of how to create figures and tables, as well as how to reference them in the text. The document is written in Quarto, a system for creating documents with R Markdown. The apaquarto extension provides a template for creating APA7-formatted manuscripts."
-keywords: [R programming, ggplot2, data communication]
-# If true, tables and figures are mingled with the text instead of listed at the end of the document.
+keywords: [education inequality, internal migration, education funding, fiscal decentralization]
 floatsintext: true
-# Numbered lines (.pdf and .docx only)
 numbered-lines: false
 # File with references
 bibliography: [r-references.bib, bibliography.bib]
-# Suppress title page
 suppress-title-page: false
 # Link citations to references
 link-citations: true
 # If true, adds today's date below author affiliations. If text, can be any value.
-# This is not standard APA format, but it is convenient.
-# Works with docx, html, and typst. 
-draft-date: false
+draft-date: true
 # Language options. See https://quarto.org/docs/authoring/language.html
 lang: en
 language:
@@ -44,10 +39,6 @@ language:
   citation-masked-date: "n.d."
   citation-masked-title: "Masked Title"
   email: "Email"
-#  title-block-author-note: "Author Note"
-#  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
-#  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
-#  title-impact-statement: "Impact Statement"
   references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
 format:
   apaquarto-html: default
@@ -61,8 +52,6 @@ format:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
     keep-tex: true
-    # You can turn these off for a simple document
-    # But you probably want them for a thesis or chapter
     list-of-figures: true
     list-of-tables: true
     # Change default output size of figures unless specified in the chunk
