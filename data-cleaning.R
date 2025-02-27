@@ -6,97 +6,99 @@ library(knitr) #to use kable
 library(estimatr) #to use lm_robust
 library(sandwich) #to use lm.cluster
 
-setwd("F:/UChicago/课程/D2MR/repos/migrant-student-education")
-
-## Investigate w2 data ##
+#### Investigate CEPS wave 2 data ####
 
 ## import w2 data 
-cepsw2.st <- read_dta("./cepsw2data/cepsw2studentEN.dta")
-cepsw2.st.orig <- cepsw2.st
+w2.st <- read_dta("./cepsw2data/cepsw2studentEN.dta")
+w2.st.orig <- w2.st
 
-# rename `w2a01` as `mig_status`
-cepsw2.st.orig <- cepsw2.st.orig %>% 
-  rename(mig_status = w2a01) %>%
+## import w2 school data (principle data)
+w2.pr <- read_dta("./cepsw2data/cepsw2principalEN.dta")
+w2.pr.orig <- w2.pr
+
+## import w2 parents data
+w2.pa <- read_dta("./cepsw2data/cepsw2parentEN.dta")
+w2.pa.orig <- w2.pa
+
+# wrangling data
+## merge w2 parent data with w2 student data
+w2.st.pa <- w2.st.orig %>%
+  left_join(w2.pa.orig, by = c("ids", "clsids", "w2clsids", "schids", "ctyids"))
+
+## merge w2 school data with `w2.st.pa`
+w2.join <- w2.pr.orig %>%
+  left_join(w2.st.pa, by = c("schids", "ctyids"))
+
+## select variables that account
+w2.selected <- w2.join %>% 
+  ## rename variables
+  rename(## migrant status
+         mig_status = w2a01, 
+         ## school data
+         per_st_funding = w2pla15, ## per student funding
+         mig_funding = w2pla16, ## migrant student funding
+         centgov_fund_pct= w2pla1701, ## central government funding percentage
+         prefgov_fund_pct = w2pla1702, ## prefectural government funding percentage
+         countgov_fund_pct = w2pla1703, ## county government funding percentage
+         stucharge_pct = w2pla1704, ## student charging percentage
+         same_charge_std = w2pld0200, ## same charging standard
+         mig_subsidy = w2pld0405, ## whether migrant student are covered with subsidy
+         ## parent data
+         mig_locsch_access = w2bc07, ## can migrant students apply for local schools
+         mig_locsch_require = w2bc0800, ## if so, what are the special requirements
+         fam_fin = w2be23, ## family financial status-SES indicator
+         fam_edu = w2be08, ## family education status-SES indicator
+         fam_ocp = w2be09 ## family occupation status-SES indicator
+  ) %>%
   mutate(
     # calculate the percentage of chinese, math, and english scores
+    # in this way, when comparing the scores of migrant and non-migrant students, the outcome is standardized using percentage rather than raw score.
     w2chnpct = w2chn/w2upchn,
     w2matpct = w2mat/w2upmat,
     w2engpct = w2eng/w2upeng
+  ) %>%
+  ## select variables of interests
+  select(
+  ids, clsids, w2clsids, schids, ctyids, mig_status, w2chnpct, w2matpct, w2engpct, 
+  per_st_funding, mig_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct, stucharge_pct, 
+  same_charge_std, mig_subsidy, mig_locsch_access, mig_locsch_require, fam_fin, fam_edu, fam_ocp
   )
 
+# investigate the selected data
 ## examine `mig_status`
-summary(cepsw2.st.orig$mig_status)
-tabulate(cepsw2.st.orig$mig_status)
+summary(w2.selected$mig_status)
+tabulate(w2.selected$mig_status)
 
-## generate a new dataset only containing migrant students
-cepsw2.st.mig <- cepsw2.st.orig %>% filter(mig_status == 2)
-summary(cepsw2.st.mig$w2cog3pl)
-summary(cepsw2.st.mig$w2chnpct)
-summary(cepsw2.st.mig$w2matpct)
-summary(cepsw2.st.mig$w2engpct)
+## examine variables of interests
+summary(w2.selected$per_st_funding)
+summary(w2.selected$centgov_fund_pct)
+summary(w2.selected$prefgov_fund_pct)
+summary(w2.selected$countgov_fund_pct)
+summary(w2.selected$stucharge_pct)
 
-## generate a new dataset only containing non-migrant students
-cepsw2.st.nonmig <- cepsw2.st.orig %>% filter(mig_status == 1)
-summary(cepsw2.st.nonmig$w2cog3pl)
-summary(cepsw2.st.nonmig$w2chnpct)
-summary(cepsw2.st.nonmig$w2matpct)
-summary(cepsw2.st.nonmig$w2engpct)
+tabulate(w2.selected$mig_funding)
+tabulate(w2.selected$same_charge_std)
+tabulate(w2.selected$mig_subsidy)
+tabulate(w2.selected$mig_locsch_access)
+tabulate(w2.selected$mig_locsch_require)
 
-## import w2 school data (principle data)
-cepsw2.pr <- read_dta("./cepsw2data/cepsw2principalEN.dta")
-cepsw2.pr.orig <- cepsw2.pr
 
-## investigate w2 school data
-# rename variables of interests
-cepsw2.pr.orig <- cepsw2.pr.orig %>% 
-  rename(per_st_funding = w2pla15, 
-         mig_funding = w2pla16, 
-         centgov_fund_pct= w2pla1701,
-         prefgov_fund_pct = w2pla1702,
-         countgov_fund_pct = w2pla1703,
-         stucharge_pct = w2pla1704,
-         same_charge_std = w2pld0200,
-         mig_subsidy = w2pld0405) 
-summary(cepsw2.pr.orig$per_st_funding)
-summary(cepsw2.pr.orig$centgov_fund_pct)
-summary(cepsw2.pr.orig$prefgov_fund_pct)
-summary(cepsw2.pr.orig$countgov_fund_pct)
-summary(cepsw2.pr.orig$stucharge_pct)
 
-tabulate(cepsw2.pr.orig$mig_funding)
-tabulate(cepsw2.pr.orig$same_charge_std)
-tabulate(cepsw2.pr.orig$mig_subsidy)
 
-## import w2 parents data
-cepsw2.pa <- read_dta("./cepsw2data/cepsw2parentEN.dta")
-cepsw2.pa.orig <- cepsw2.pa
+#### Compute seperated dataframes for migrant and non-migrant students ####
+## generate a new dataframe only containing migrant students
+w2.mig <- w2.selected %>% filter(mig_status == 2)
+summary(w2.mig$w2cog3pl)
+summary(w2.mig$w2chnpct)
+summary(w2.mig$w2matpct)
+summary(w2.mig$w2engpct)
 
-## rename variables
-cepsw2.pa.orig <- cepsw2.pa.orig %>% 
-  rename(mig_status = w2bd01,
-         mig_local_adm = w2bc07,
-         mig_local_quali = w2bc0800) 
+## generate a new dataframe only containing non-migrant students
+w2.nonmig <- w2.selected %>% filter(mig_status == 1)
+summary(w2.nonmig$w2cog3pl)
+summary(w2.nonmig$w2chnpct)
+summary(w2.nonmig$w2matpct)
+summary(w2.nonmig$w2engpct)
 
-cepsw2.pa.mig <- cepsw2.pa.orig %>% filter(mig_status == 2)
-tabulate(cepsw2.pa.mig$mig_local_adm)
-tabulate(cepsw2.pa.mig$mig_local_quali)
-
-## wrangling data
-# merge w2 parent data with w2 student data
-cepsw2.join.stpa <- cepsw2.st.orig %>%
-  left_join(cepsw2.st.orig, cepsw2.pa.orig, by = c("ids", "clsids", "w2clsids", "schids", "ctyids"))
-# merge w2 school data with `cepsw2.join.stpa`
-cepsw2.join <- cepsw2.join.stpa %>%
-  left_join(cepsw2.pr.orig, by = c("schids", "ctyids"))
-
-## select variables that account
-cepsw2.wrangled <- cepsw2.join %>% 
-  rename(fam_fin = w2be23,
-         fam_edu = w2be08,
-         fam_ocp = w2be09
-) %>%
-  select(
-  ids, clsids, w2clsids, schids, ctyids, mig_status, w2cog3pl, w2chnpct, w2matpct, w2engpct, 
-  per_st_funding, mig_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct, stucharge_pct, 
-  same_charge_std, mig_subsidy, mig_local_adm, mig_local_quali, fam_fin, fam_edu, fam_ocp
-)
+#### Save wrangled data ####
+## write_csv( , " ") 
