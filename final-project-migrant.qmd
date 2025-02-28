@@ -94,7 +94,7 @@ set.seed(1234)
 This is an inserted citation [@adamFiscalDecentralizationPublic2014].
 
 
-### Literature Review {#sec-lit-review}
+## Literature Review {#sec-lit-review}
 
 
 
