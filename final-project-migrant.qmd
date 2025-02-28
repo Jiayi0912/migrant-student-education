@@ -25,7 +25,7 @@ keywords: [education inequality, internal migration, education funding, fiscal d
 floatsintext: true
 numbered-lines: false
 # File with references
-## bibliography: [r-references.bib, bibliography.bib]
+bibliography: bibliography.bib
 suppress-title-page: false
 # Link citations to references
 link-citations: true
