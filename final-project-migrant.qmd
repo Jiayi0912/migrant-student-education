@@ -106,4 +106,5 @@ This is an inserted citation [@adamFiscalDecentralizationPublic2014].
 
 ## Conclusion
 
+\clearpage
 ## References
