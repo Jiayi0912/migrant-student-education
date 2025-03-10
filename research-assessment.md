@@ -30,57 +30,25 @@ CNetID: 12434890
 
 Section: MAPSS (political science)
 
-Research project title: Education funding, subsidies, and academic performance gap between migrant and local students in China
+Research project title: Education Funding Inequality and Academic Performance Gap between Migrant and Local Students in China
 
 Submission date: 02/26/2025
 
-Submission number (1-4):
+Submission number (1-4): 2
 
 Project GitHub repository URL: https://github.com/Jiayi0912/migrant-student-education
 
-Filename of manuscript .qmd:
+Filename of manuscript .qmd: `migrant-student-education.qmd`
 
-Filename of knitted .pdf:
+Filename of knitted .pdf: `migrant-student-education.pdf`
 
-## Overall requirements
 
-Overall requirements for the research project are as follows:
-
-1. The project must be a research project. It must provide background on a research topic, ask at least one research question, use data to attempt to answer that question, report the results of the data analysis, and interpret the results in the context of the research question.
-2. The project must be contained in a github repository that follows git best practices and includes all necessary files to run the project from start to finish, including:
-    1. The .qmd file for the manuscript
-    2. All data files used in the project
-    3. All scripts used in the project
-    4. A README.md file & .gitignore file
-3. The project must be reproducible -- a reader should be able to clone the repo and run the .qmd from start to finish without error. The .qmd file should include:
-    1. A YAML header with all fields necessary for an APA manuscript
-    2. Setup source chunks that load libraries, read in data, set chunk options, set seed, etc.
-    3. Minimally, an IMRD structure (Introduction, Methods, Results, Discussion), though it may be more complex
-    4. Integration of markdown and code chunks throughout, following best practices for using code chunks
-    5. Figures and tables rendered in code chunks
-    6. Inline R code & references to render data-dependent text
-    7. At least 1 descriptive analysis and 1 hypothesis test, either in code chunks or sourced scripts
-    8. Frequent and informative code comments throughout
-4. The .qmd file should knit/render to an APA7 formatted manuscript with one click and no errors. The knitted manuscript should include:
-    1. A title page with title, author, and institutional affiliation
-    2. An abstract (this may be minimal, but should exist)
-    3. Narrative text comprising a complete research report
-    4. APA7 references, both in-text citations and a References page
-    5. Publication-ready figures (2+) and tables (1+)
-    6. Results of all analyses presented in-text (and where appropriate, in tables), with no raw R output; where possible, all text should be data-dependent and rendered with inline R code
-    7. Quarto generated references to all figures and tables
-    8. Statistical analyses and figures interpreted in narrative text
-5. The .qmd should render a .pdf identical to the .pdf you submit for grading
-
-=======
 
 ## AI Statement
 
 Describe whether and how you used AI/LLMs when completing this project: 
 
 Optionally (for engagement points) reflect on your use of AI:
-
-
 
 
 
