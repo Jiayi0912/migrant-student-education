@@ -1,5 +1,5 @@
 ---
-title: "Education Funding, Subsidies, and Academic Performance Gap between Migrant and Local Students in China"
+title: "Education Funding Inequality and Academic Performance Gap between Migrant and Local Students in China"
 shorttitle: "D2MR Final Project"
 author:
   - name: Jiayi Zou
@@ -29,9 +29,7 @@ bibliography: bibliography.bib
 suppress-title-page: false
 # Link citations to references
 link-citations: true
-# If true, adds today's date below author affiliations. If text, can be any value.
 draft-date: true
-# Language options. See https://quarto.org/docs/authoring/language.html
 lang: en
 language:
   citation-last-author-separator: "and"
@@ -84,27 +82,33 @@ conflicts_prefer(flextable::theme_apa, .quiet = TRUE) # we know that we never wa
 set.seed(1234)
 
 # Generate r-references.bib file (see explanation in the Methods section)
-## papaja::r_refs(file = "r-references.bib")
-
-
+papaja::r_refs(file = "r-references.bib")
 
 ```
 
-## Introduction
-This is an inserted citation [@adamFiscalDecentralizationPublic2014].
+# Introduction
+Internal migration in China has accelerated along with urbanization since the implementation of Reform and Opening Up policy in the early 1980s. Statistics from the 7th National Census in 2020 show that over 70 million children in China have migration status, which means one fourth of Chinese child population move interprovincially or intraprovincially with their parents ^[See in [Promoting reunion and avoiding separation - China's migrant children development report 2024](https://www.163.com/dy/article/JHFCU34705560ZWH.html).]. Education and sociology research focusing on internal migrant students found that these children have a relatively lower school achievement compared to local students without migrant status, and suffer from academic and financial difficulties, as well as alienation in public education system [@chenAccessPublicSchools2013; @huangMythMigrantsProblems2017a].
+
+Previous studies offered policy explanations for migrant students’ underachievement. @liDataAnalysisCurrent2018 indicated that central governments have less educational funding distributed to provinces containing more migrant population due to fiscal decentralization. On the other hand, the *Hukou* policy ^[The Hukou Policy is a population management policy that restraints non-local residents from/uplifts the threshold of enjoying the same social, medical, and educational public services as local households do.] has a history of limiting policy supports for internal migrants including subsidies, fee standards, and other financial accesses, which contributes migrant students’ underperformance in school [@luVillagersCityResilience2023]. 
+
+However, both perspectives have failed to identify an integrated framework: if we can discover the impact of differentiated financial supports and per student funding appropriated to two groups of students, then it is plausible to assume that fiscal decentralization is producing local-migrant educational inequity through the lens of Hukou status.
+
+In this study, I seek to understand **how governments’ differentiated provision of education fundings affects the academic performance gap between migrant students and local students in China** . My hypothesis is **when the government provides migrant students with limited fundings, and less-supportive charging standards and subsidy policies, the academic performance gap between the two groups of students is likely to widen**. 
+
+Beyond measuring educational disparities created by the complexity of fiscal decentralization and population management system, this research has practical significance for addressing the ongoing migrant problems in China’s urban governance and the institution of compulsory education [@nationalbureauofstatisticsofchinaetal_2023_what]. Last but not least, this study can also offer indications for how educational finance and policies provided by government interacts with structural inequality in other social contexts (e.g., areas with higher poverty level or racial disparities, see in studies by @baird_2008_federal and @hyman_2017_does).
+
+# Literature Review 
+
+The imbalance of education finance provision increases the overall stress of providing equal education service to local-registered residents and migrant influx [@jinRegionalDecentralizationFiscal2005a]. 
+producing biased human capital investments in education system [@heckmanChinasHumanCapital2005]
+
+# Methods
 
 
-## Literature Review {#sec-lit-review}
 
+# Analysis Results
 
-
-## Methods
-
-
-
-## Analysis Results
-
-## Conclusion
+# Conclusion
 
 \clearpage
-## References
+# References
