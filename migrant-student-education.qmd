@@ -71,17 +71,15 @@ library(ftExtra)
 library(knitr)
 library(broom)
 
-# In addition to strategically ordering your library calls, 
-# you can use the conflicts_prefer function to specify which 
-# package's function to use when there are multiple options.
+# use the conflicts_prefer function to avoid conflicts
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
-conflicts_prefer(flextable::theme_apa, .quiet = TRUE) # we know that we never want the papaja one!
+conflicts_prefer(flextable::theme_apa, .quiet = TRUE) 
 
 # Set seed
 set.seed(1234)
 
-# Generate r-references.bib file (see explanation in the Methods section)
+# Generate r-references.bib file 
 papaja::r_refs(file = "r-references.bib")
 
 ```
@@ -89,9 +87,9 @@ papaja::r_refs(file = "r-references.bib")
 # Introduction
 Internal migration in China has accelerated along with urbanization since the implementation of Reform and Opening Up policy in the early 1980s. Statistics from the 7th National Census in 2020 show that over 70 million children in China have migration status, which means one fourth of Chinese child population move interprovincially or intraprovincially with their parents ^[See in [Promoting reunion and avoiding separation - China's migrant children development report 2024](https://www.163.com/dy/article/JHFCU34705560ZWH.html).]. Education and sociology research focusing on internal migrant students found that these children have a relatively lower school achievement compared to local students without migrant status, and suffer from academic and financial difficulties, as well as alienation in public education system [@chenAccessPublicSchools2013; @huangMythMigrantsProblems2017a].
 
-Previous studies offered policy explanations for migrant students’ underachievement. @liDataAnalysisCurrent2018 indicated that central governments have less educational funding distributed to provinces containing more migrant population due to fiscal decentralization. On the other hand, the *Hukou* policy ^[The Hukou Policy is a population management policy that restraints non-local residents from/uplifts the threshold of enjoying the same social, medical, and educational public services as local households do.] has a history of limiting policy supports for internal migrants including subsidies, fee standards, and other financial accesses, which contributes migrant students’ underperformance in school [@luVillagersCityResilience2023]. 
+Previous studies offered policy explanations for migrant students’ underachievement. @liDataAnalysisCurrent2018 indicated that central governments have less educational funding distributed to provinces containing more migrant population due to fiscal decentralization. On the other hand, the *Hukou* policy ^[The *Hukou* Policy is a population management policy that restraints non-local residents from/uplifts the threshold of enjoying the same social, medical, and educational public services as local households do.] has a history of limiting policy supports for internal migrants including subsidies, fee standards, and other financial accesses, which contributes migrant students’ underperformance in school [@luVillagersCityResilience2023]. 
 
-However, both perspectives have failed to identify an integrated framework: if we can discover the impact of differentiated financial supports and per student funding appropriated to two groups of students, then it is plausible to assume that fiscal decentralization is producing local-migrant educational inequity through the lens of Hukou status.
+However, both perspectives have failed to identify an integrated framework: if we can discover the impact of differentiated financial supports and per student funding appropriated to two groups of students, then it is plausible to assume that fiscal decentralization is producing local-migrant educational inequity through the lens of *Hukou* status.
 
 In this study, I seek to understand **how governments’ differentiated provision of education fundings affects the academic performance gap between migrant students and local students in China** . My hypothesis is **when the government provides migrant students with limited fundings, and less-supportive charging standards and subsidy policies, the academic performance gap between the two groups of students is likely to widen**. 
 
@@ -99,8 +97,15 @@ Beyond measuring educational disparities created by the complexity of fiscal dec
 
 # Literature Review 
 
-The imbalance of education finance provision increases the overall stress of providing equal education service to local-registered residents and migrant influx [@jinRegionalDecentralizationFiscal2005a]. 
-producing biased human capital investments in education system [@heckmanChinasHumanCapital2005]
+In this study, we define *provision of education fundings* as a combination of three elements: (1) the amount of funding, including per-student funding, subsidies, and charging standards; (2) the proportion of funding, which is seperated into central/provincial and county/district level; and (3) the indicator of differentiation, which is whether migrant students enjoy the equal educational financial resources as locally-registered students in terms of funding, subsidies, and charging standards. Inspired by @knoeppelEducationFundingStudent2015, we consider that education funding, influenced by fiscal decentralization and *Hukou* system, affects migrant and local students in the same schools through context for schooling, which results in unequal academic performances between two student groups.
+
+Scholarship in education funding suggests that students of color have been continuously underfunded by federal and state, and the discrepancy between their and higher-SES/white counterparts’ academic performance persists [@darling-hammond_2004_color; @gaddislauen_2014_school; @lafortuneetal_2018_school; @ryan_1999_schools]. In China, researchers found similar patterns and disparities among migrant students and local-*Hukou* students. Evidence from China Education Paney survey indicates that local students outperform migrant students at higher quantile point, and increasing total education expenditure is likely shrink the academic achievement gap [@fangStudyOutcomeEquity2024]. However, the association between other aspects of education expenditure (e.g. per
+student funding, central and local government appropriation ratio) and local-migrant academic outcome equity requires further exploration, as most studies center on how funding expands spatial education inequity rather than disparities between different *Hukou* statuses in cities [@weiAnalysisReportUrbanrural2022].
+
+Beyond education finance disparities, education policies also differ for migrant and local students in many provinces, which means students without local **Hukou** may have no government subsidies or face different charging standards. Researchers refer this phenomenon as deflecting internal migrants’ demands and using education to control urban population influx [@chanPhantomServicesDeflecting2019; @friedmanBiopoliticsUrbanizationChina2018]. The disadvantage encountered by migran students varies in different city scenarios: if local education policy background is more **Hukou**-based discriminatory, then migrant students are more likely to receive lower school performance than local students [@maMigrantStatusSchool2020]. Deflecting education resources away from the underprivileged students occurs in U.S. schools to avoid losing fundings under school accountability, as the minority subgroups have a higher possibility to fall short of the average academic target [@hanushekraymond_2005_does; @oday_2009_complexity]. Similarly, turning down education fundings for migrant students is also a strategy for Chinese local governments to decrease overall financial stress due to fiscal decentralization [@jinRegionalDecentralizationFiscal2005a; @longFiscalDecentralisationKnowledge2017].
+
+As migrant students represent social minorities with limited or without *Hukou*-related rights in urban spaces, exploring their education achievements influenced by government funding and financial supports can demonstrate the dynamic and diverse efficiency of providing public services, offering empirical evidence for the development of decentralization theory [@oates_2008_evolution; @oatesSecondGenerationTheoryFiscal2005].
+
 
 # Methods
 
