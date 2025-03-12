@@ -224,7 +224,7 @@ In this project, we use the follow-up (2014-2015) dataset from the China Educati
 
 ## Measures
 The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Additionally, migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
-<!--here's a boxplot to compare the distribution of exam score of two groups -->
+<!--here's a boxplot  -->
 ```{r}
 #| label: fig-box-academic-performance
 #| fig-cap: "Comparison of the distribution of Chinese, Mathematics, and English exam scores (Migrant vs. Local students)"
@@ -261,7 +261,38 @@ ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
 ```
 
 As for the independent variable, we take three aspects into account: the amount of per-student funding; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
-<!-- here's a  -->
+<!-- here's a t-test table  -->
+```{r}
+#| label: tbl-ttest-two-sample-perfunding
+#| tbl-caption: "Two-sample t-test on the mean per-student funding across program types"
+#| tbl-pos: H
+
+# Two-sample t-test of per-student funding by migrant status
+ttest2_per <- t.test(
+       filter(w2clean, mig_status == "1")$per_st_funding, # local students
+       filter(w2clean, mig_status == "2")$per_st_funding # migrant students
+       )
+
+# summarize the model
+ttest2_per_df <- data.frame(
+  `Statistic (t)` = ttest2_per$statistic,
+  `df` = ttest2_per$parameter,
+  `p-value` = round(ttest2_per$p.value, 3),
+  `Mean (Local students)` = ttest2_per$estimate[1],
+  `Mean (Migrant students)` = ttest2_per$estimate[2],
+  check.names = FALSE
+)
+
+# use flextable to show the results
+tibble_per <- ttest2_per_df %>%
+  flextable() %>%  # convert the dataframe into flextable
+  theme_apa() %>%  # use apa theme
+  autofit()  # automatically adjust table width
+
+print(tibble_per)
+
+```
+
 
 ## Methods
 
@@ -283,7 +314,13 @@ In this funtion, we denote *i* as the individual student and *j* as the school. 
 #| tbl-cap: "The effect of education funding on average Chinese exam scores differences within schools"
 #| warning: FALSE
 
-library(broom.mixed) # for formatted tables that can dit multilevel model
+# for formatted tables that can dit multilevel model
+if (!require(broom.mixed)) {
+ install.packages("broom.mixed")  
+ library(broom.mixed)  
+}
+
+# install.packages("lmerTest")
 library(lmerTest) # to conduct multilevel model (with p.value)
 
 # fit the multilevel model for Chinese scores
