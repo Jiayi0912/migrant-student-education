@@ -68,7 +68,6 @@ library(conflicted)
 library(papaja)
 library(flextable)
 library(ftExtra)
-library(knitr)
 library(MASS) #robust regressions
 library(knitr) #to use kable
 library(estimatr) #to use lm_robust
@@ -225,10 +224,10 @@ In this project, we use the follow-up (2014-2015) dataset from the China Educati
 
 ## Measures
 The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Additionally, migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
-<!--  here's a figure (histogram) -->
+<!--here's a boxplot to compare the distribution of exam score of two groups -->
 ```{r}
 #| label: fig-box-academic-performance
-#| fig-cap: "Comparison of the Distribution of Chinese, Mathematics, and English Exam Scores between Local Students and Migrant Students"
+#| fig-cap: "Comparison of the distribution of Chinese, Mathematics, and English exam scores (Migrant vs. Local students)"
 #| fig-width: 5
 #| fig-height: 4
 #| fig-pos: H
@@ -262,6 +261,7 @@ ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
 ```
 
 As for the independent variable, we take three aspects into account: the amount of per-student funding; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
+<!-- here's a  -->
 
 ## Methods
 
@@ -279,14 +279,43 @@ In this funtion, we denote *i* as the individual student and *j* as the school. 
 
 # Analysis Results
 ```{r}
-#| label: tbl
-#| tbl-cap:
+#| label: tbl-chinese-achivement-comparison
+#| tbl-cap: "The effect of education funding on average Chinese exam scores differences within schools"
+#| warning: FALSE
 
-library(broom) # for formatted tables
+library(broom.mixed) # for formatted tables that can dit multilevel model
+library(lmerTest) # to conduct multilevel model (with p.value)
 
+# fit the multilevel model for Chinese scores
+model_chi <- lmer(w2chnstd ~ mig_status + per_st_funding + centgov_fund_pct + prefgov_fund_pct + countgov_fund_pct + mig_funding + same_charge_std + mig_subsidy + mig_status:per_st_funding + mig_status:centgov_fund_pct + mig_status:prefgov_fund_pct + mig_status:countgov_fund_pct + mig_status:mig_funding + mig_status:same_charge_std + mig_status:mig_subsidy + (1 | schids), data = w2clean)
 
-
+# extract the results
+report_lmer(model_chi)
   
+```
+
+```{r}
+#| label: tbl-math-achivement-comparison
+#| tbl-cap: "The effect of education funding on average Mathematics exam scores differences within schools"
+#| warning: FALSE
+
+# fit the multilevel model for Chinese scores
+model_mat <- lmer(w2matstd ~ mig_status + per_st_funding + centgov_fund_pct + prefgov_fund_pct + countgov_fund_pct + mig_funding + same_charge_std + mig_subsidy + mig_status:per_st_funding + mig_status:centgov_fund_pct + mig_status:prefgov_fund_pct + mig_status:countgov_fund_pct + mig_status:mig_funding + mig_status:same_charge_std + mig_status:mig_subsidy + (1 | schids), data = w2clean)
+
+# extract the results
+report_lmer(model_mat)
+```
+
+```{r}
+#| label: tbl-english-achivement-comparison
+#| tbl-cap: "The effect of education funding on average English exam scores differences within schools"
+#| warning: FALSE
+
+# fit the multilevel model for Chinese scores
+model_eng <- lmer(w2engstd ~ mig_status + per_st_funding + centgov_fund_pct + prefgov_fund_pct + countgov_fund_pct + mig_funding + same_charge_std + mig_subsidy + mig_status:per_st_funding + mig_status:centgov_fund_pct + mig_status:prefgov_fund_pct + mig_status:countgov_fund_pct + mig_status:mig_funding + mig_status:same_charge_std + mig_status:mig_subsidy + (1 | schids), data = w2clean)
+
+# extract the results
+report_lmer(model_eng)
 ```
 
 
