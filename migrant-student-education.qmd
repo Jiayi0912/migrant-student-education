@@ -1,5 +1,5 @@
 ---
-title: "Education Funding Inequality and Academic Performance Gap between Migrant and Local Students in China"
+title: "Education Funding Inequality and Academic Performance Disparity between Migrant and Local Students in China"
 shorttitle: "D2MR Final Project"
 author:
   - name: Jiayi Zou
@@ -64,6 +64,7 @@ format:
 
 # Load necessary packages
 library(tidyverse)
+library(conflicted)
 library(papaja)
 library(flextable)
 library(ftExtra)
@@ -96,7 +97,7 @@ Previous studies offered policy explanations for migrant students’ underachiev
 
 However, both perspectives have failed to identify an integrated framework: if we can discover the impact of differentiated financial supports and per student funding appropriated to two groups of students, then it is plausible to assume that fiscal decentralization is producing local-migrant educational inequity through the lens of *Hukou* status.
 
-In this study, I seek to understand **how governments’ differentiated provision of education fundings affects the academic performance gap between migrant students and local students in China** . My hypothesis is **when the government provides migrant students with limited fundings, and less-supportive charging standards and subsidy policies, the academic performance gap between the two groups of students is likely to widen**. 
+In this study, I seek to understand **how governments’ differentiated provision of education fundings affects the academic performance disparity between migrant students and local students in China** . My hypothesis is **when the government provides migrant students with limited fundings, and less-supportive charging standards and subsidy policies, the academic performance gap between the two groups of students is likely to widen**. 
 
 Beyond measuring educational disparities created by the complexity of fiscal decentralization and population management system, this research has practical significance for addressing the ongoing migrant problems in China’s urban governance and the institution of compulsory education [@nationalbureauofstatisticsofchinaetal_2023_what]. Last but not least, this study can also offer indications for how educational finance and policies provided by government interacts with structural inequality in other social contexts (e.g., areas with higher poverty level or racial disparities, see in studies by @baird_2008_federal and @hyman_2017_does).
 
@@ -117,12 +118,10 @@ As migrant students represent social minorities with limited or without *Hukou*-
 # Data and Methods
 
 ## Data 
-In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](). CEPS is conducted by National Survey
-Research Center at Renmin University of China and it is the most used dataset in studies
-of Chinese internal migrant students. Data includes 1769 migrant students and 7960 non- migrant students who have valid information of migrant status in two phases of survey. We will merge datasets based on student, class, and school id, and remove values
-without valid information of hukou status.
+In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes 1769 migrant students and 7960 non- migrant students who have valid information of migrant status in two phases of survey. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 ```{r}
-#| label: data-cleaning
+#| label: import-data
+#| include: FALSE
 
 library(haven) #to import STATA files
 
@@ -171,25 +170,64 @@ w2.cleaned<- w2.join %>%
   mutate(
     # calculate the percentage of chinese, math, and english scores
     # in this way, when comparing the scores of migrant and non-migrant students, the outcome is standardized using percentage rather than raw score.
-    w2chnpct = w2chn/w2upchn,
-    w2matpct = w2mat/w2upmat,
-    w2engpct = w2eng/w2upeng
+    w2chnstd = 100 * w2chn/w2upchn,
+    w2matstd = 100 * w2mat/w2upmat,
+    w2engstd = 100 * w2eng/w2upeng
   ) %>%
   ## select variables of interests
   select(
-  ids, clsids, w2clsids, schids, ctyids, mig_status, w2chnpct, w2matpct, w2engpct, 
+  ids, clsids, w2clsids, schids, ctyids, mig_status, w2chnstd, w2matstd, w2engstd, 
   per_st_funding, mig_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct, stucharge_pct, 
   same_charge_std, mig_subsidy, mig_locsch_access, mig_locsch_require, fam_fin, fam_edu, fam_ocp
-  )
+  ) 
+
 
 # write out the dataframe
 write_csv(w2.cleaned, "w2-cleaned.csv")
+
+## investigate the structure of the data frame
+
+str(w2.cleaned)
+
+```
+
+```{r}
+#| label: data-cleaning
+
+## in the `str()` function we have discovered certain issues with the dataframe that needs further improvements, 
+## and we also want to drop NA values in `mig_status`
+
+w2clean <- w2.cleaned %>%
+  ## drop missing values in `mig_status`
+  filter(!is.na(mig_status))  %>% 
+  
+  ## variables of migrant status, whether migrant students are provided with funding, 
+  ## same charging standard, and subsidy, should all be vactors (without order)
+  mutate(across(c(mig_status, mig_funding, same_charge_std, mig_subsidy), as.factor)) %>%
+  
+  ## deal with missing values 
+  
+  ## for continuous variables, subtitute the missing values with mean (compute mean for local and migrant students)
+  group_by(mig_status) %>%  # group by mig_status
+  # replace the missing exam score with the mean of each group 
+  mutate(across(c(w2chnstd, w2matstd, w2engstd, 
+                  per_st_funding, centgov_fund_pct, 
+                  prefgov_fund_pct, countgov_fund_pct),
+                ~ ifelse(is.na(.), mean(., na.rm = TRUE), .))) %>%
+  # replace the missing per_st_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct with the mean of each group 
+  ungroup() %>%  # ungroup
+
+  ## for categorical variables, subtitute the missing values with level "missing"
+  mutate(across(c(mig_funding, same_charge_std, mig_subsidy), 
+                ~ factor(replace_na(as.character(.), "missing"), levels = c(levels(.), "missing"))))
 
 ```
 
 
 ## Measures
-
+The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In [], a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students.
+<!--  here's a figure (histogram) -->
+As for the independent variable, we take three aspects into account: the amount of per-student funding and subsidies; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
 
 ## Methods
 
