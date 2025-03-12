@@ -118,9 +118,6 @@ Beyond education finance disparities, education policies also differ for migrant
 As migrant students represent social minorities with limited or without *Hukou*-related rights in urban spaces, exploring their education achievements influenced by government funding and financial supports can demonstrate the dynamic and diverse efficiency of providing public services, offering empirical evidence for the development of decentralization theory [@oates_2008_evolution; @oatesSecondGenerationTheoryFiscal2005].
 
 # Data and Methods
-
-## Data 
-In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 ```{r}
 #| label: import-data
 #| include: FALSE
@@ -224,6 +221,9 @@ write_csv(w2clean, "w2-cleaned.csv")
 
 
 ```
+## Data 
+In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
+
 
 
 ## Measures
@@ -232,6 +232,10 @@ The dependent variable in our study is the academic performance, which is measur
 ```{r}
 #| label: fig-box-academic-performance
 #| fig-cap: "Comparison of the Distribution of Chinese, Mathematics, and English Exam Scores between Local Students and Migrant Students"
+#| fig-width: 5
+#| fig-height: 4
+#| fig-pos: H
+
 
 ## Organize the dataframe in to a form better for ggplot function to generate plots
 df_long <- w2clean %>%
@@ -255,6 +259,7 @@ ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
   scale_fill_manual(values = palette_apa, labels = c("Local", "Migrant")) +
   labs(x = "Subject", y = "Score", fill = "Student Type") +
   # use the theme_apa function
+  theme_minimal() +
   theme_apa()
 
 ```

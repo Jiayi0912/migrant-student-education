@@ -440,24 +440,46 @@ Education Panel Survey
 \href{http://ceps.ruc.edu.cn/English/Home.htm}{CEPS}. CEPS is conducted
 by National Survey Research Center at Renmin University of China and it
 is the most used dataset in studies of Chinese internal migrant
-students. Data includes 1769 migrant students and 7960 non- migrant
-students who have valid information of migrant status in two phases of
-survey. We will merge datasets based on student, class, and school id,
-and remove values without valid information of hukou status.
+students. Data includes 1769 migrant students and 7960 non-migrant
+students who have were at 9th Grade as in the final year of Junior High.
+We will merge datasets based on student, class, and school id, and
+remove values without valid information of hukou status.
 
 \subsection{Measures}\label{measures}
 
 The dependent variable in our study is the academic performance, which
 is measured by three indexes: score (percentage) of Chinese,
-Mathematics, and English exams. In {[}{]}, a primary investigation into
+Mathematics, and English exams. In
+Figure~\ref{fig-box-academic-performance}, a primary investigation into
 the follow-up dataset suggests that the medium and average of all three
 test scores for migrant students are all less than the equivalents for
-non-migrant students. As for the independent variable, we take three
-aspects into account: the amount of per-student funding and subsidies;
-the proportion of funding sources, which is seperated into
-central/provincial level and county/district level; and whether migrant
-students enjoy the equal funding, subsidies, and charging standards as
-locally-registered students do.
+non-migrant students. Additionally, migrant students performances in
+Chinese and English exams are more concentrated than local students, but
+possibly due to different sample size. More outliers in Chinese exam
+scores appeared in migrant student group than their local counterparts,
+suggesting migrant students might experience greater difficulty in
+achieveing in Chinese exams.
+
+\begin{figure}[H]
+
+\caption{\label{fig-box-academic-performance}Comparison of the
+Distribution of Chinese, Mathematics, and English Exam Scores between
+Local Students and Migrant Students}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{migrant-student-education_files/figure-pdf/fig-box-academic-performance-1.pdf}}
+
+}
+
+\end{figure}%
+
+As for the independent variable, we take three aspects into account: the
+amount of per-student funding and subsidies; the proportion of funding
+sources, which is seperated into central/provincial level and
+county/district level; and whether migrant students enjoy the equal
+funding, subsidies, and charging standards as locally-registered
+students do.
 
 \subsection{Methods}\label{methods}
 
