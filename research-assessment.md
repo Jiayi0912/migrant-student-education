@@ -98,7 +98,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     2.  Uses relative paths correctly
     3.  Does not have duplicate/redundant elements
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments: 
 
@@ -107,7 +107,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1.  Includes description of repo purpose, data use, research questions, etc.
     2.  Outlines the repo structure with file tree or similar
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -116,7 +116,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1.  All scripts run and all notebooks render if the repo is cloned to another location
     2.  .gitingore comprehensively excludes unnecessary, private, and very large files and are commented appropriately
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -125,7 +125,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1.  Used frequent, informative commit messages
     2.  Relies on document revisions rather than manually created new versions
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
