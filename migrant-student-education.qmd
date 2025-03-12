@@ -79,6 +79,7 @@ conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(dplyr::select, .quiet =TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
 conflicts_prefer(flextable::theme_apa, .quiet = TRUE) 
+conflicts_prefer(lmerTest::lmer, .quiet = TRUE) # endure p-value can return in the MLM results
 
 # Set seed
 set.seed(1234)
@@ -277,7 +278,7 @@ ttest2_per <- t.test(
 ttest2_per_df <- data.frame(
   `Statistic (t)` = ttest2_per$statistic,
   `df` = ttest2_per$parameter,
-  `p-value` = round(ttest2_per$p.value, 3),
+  `P-value` = round(ttest2_per$p.value, 3),
   `Mean (Local students)` = ttest2_per$estimate[1],
   `Mean (Migrant students)` = ttest2_per$estimate[2],
   check.names = FALSE
@@ -286,7 +287,6 @@ ttest2_per_df <- data.frame(
 # use flextable to show the results
 tibble_per <- ttest2_per_df %>%
   flextable() %>%  # convert the dataframe into flextable
-  theme_apa() %>%  # use apa theme
   autofit()  # automatically adjust table width
 
 print(tibble_per)
@@ -309,6 +309,40 @@ $$
 In this funtion, we denote *i* as the individual student and *j* as the school. The estimate for the fixed effect are as follows: (1) $\beta_0$ is the overall intercept; (2) $\beta_1$ stands for the effect of being a migrant student; (3) $\beta_2$ to $\beta_8$ extimate the effects of independent variables; (4) $\beta_9$ to $\beta_15$ extimate the interaction effects of independent variables and migrant status; (5) $u_j$ is the random intercept for school *j*; and (6) $\epsilon_{ij}$ represents the residual error.
 
 # Analysis Results
+
+```{r}
+#| label: fig-ggplot-chinese
+#| fig-cap: "The linear relation between per-student funding and average Chinese exam scores across two student groups"
+
+# compute geom_smooth with two facets
+ggplot(w2clean, aes(x = per_st_funding, y = w2chnstd, color = factor(mig_status))) +
+ 
+  # plotting points with transparency
+  geom_point(alpha = 0.5, size = 0.5 ) +  
+  
+  # adding black smooth line and "se" to show confidence intervals
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.5) +  
+  
+  # seperate the plot in two facets (by migrant status)
+  facet_wrap(~ mig_status, labeller = labeller(mig_status = c("1" = "Local Students", "2" = "Migrant Students"))) +  
+  labs(
+    x = "Per-Student Funding (per_st_funding)",
+    y = "Chinese Test Score (w2chnstd)",
+    color = "Migrant Status"  # set legend titles
+  ) +
+  
+  scale_color_manual(
+    values = palette_apa,  # set colors
+    labels = c("1" = "Local Students", "2" = "Migrant Students")  # set legend labels
+  ) +
+  
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",  # setting the position of the legend
+    axis.text.x = element_text(angle = 45, hjust = 1)  # rotate the x axises
+  )
+```
+
 ```{r}
 #| label: tbl-chinese-achivement-comparison
 #| tbl-cap: "The effect of education funding on average Chinese exam scores differences within schools"
@@ -330,6 +364,8 @@ model_chi <- lmer(w2chnstd ~ mig_status + per_st_funding + centgov_fund_pct + pr
 report_lmer(model_chi)
   
 ```
+
+
 
 ```{r}
 #| label: tbl-math-achivement-comparison
