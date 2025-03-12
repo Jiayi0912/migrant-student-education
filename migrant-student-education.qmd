@@ -63,16 +63,21 @@ format:
 #| include: false
 
 # Load necessary packages
-library(conflicted)
 library(tidyverse)
 library(papaja)
 library(flextable)
 library(ftExtra)
 library(knitr)
 library(broom)
+library(MASS) #robust regressions
+library(knitr) #to use kable
+library(estimatr) #to use lm_robust
+library(sandwich) #to use lm.cluster
+
 
 # use the conflicts_prefer function to avoid conflicts
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
+conflicts_prefer(dplyr::select, .quiet =TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
 conflicts_prefer(flextable::theme_apa, .quiet = TRUE) 
 
@@ -99,21 +104,101 @@ Beyond measuring educational disparities created by the complexity of fiscal dec
 
 In this study, we define *provision of education fundings* as a combination of three elements: (1) the amount of funding, including per-student funding, subsidies, and charging standards; (2) the proportion of funding, which is seperated into central/provincial and county/district level; and (3) the indicator of differentiation, which is whether migrant students enjoy the equal educational financial resources as locally-registered students in terms of funding, subsidies, and charging standards. Inspired by @knoeppelEducationFundingStudent2015, we consider that education funding, influenced by fiscal decentralization and *Hukou* system, affects migrant and local students in the same schools through context for schooling, which results in unequal academic performances between two student groups.
 
-Scholarship in education funding suggests that students of color have been continuously underfunded by federal and state, and the discrepancy between their and higher-SES/white counterparts’ academic performance persists [@darling-hammond_2004_color; @gaddislauen_2014_school; @lafortuneetal_2018_school; @ryan_1999_schools]. In China, researchers found similar patterns and disparities among migrant students and local-*Hukou* students. Evidence from China Education Paney survey indicates that local students outperform migrant students at higher quantile point, and increasing total education expenditure is likely shrink the academic achievement gap [@fangStudyOutcomeEquity2024]. However, the association between other aspects of education expenditure (e.g. per
-student funding, central and local government appropriation ratio) and local-migrant academic outcome equity requires further exploration, as most studies center on how funding expands spatial education inequity rather than disparities between different *Hukou* statuses in cities [@weiAnalysisReportUrbanrural2022].
+## Education Funding and Academic Achievement
 
-Beyond education finance disparities, education policies also differ for migrant and local students in many provinces, which means students without local **Hukou** may have no government subsidies or face different charging standards. Researchers refer this phenomenon as deflecting internal migrants’ demands and using education to control urban population influx [@chanPhantomServicesDeflecting2019; @friedmanBiopoliticsUrbanizationChina2018]. The disadvantage encountered by migran students varies in different city scenarios: if local education policy background is more **Hukou**-based discriminatory, then migrant students are more likely to receive lower school performance than local students [@maMigrantStatusSchool2020]. Deflecting education resources away from the underprivileged students occurs in U.S. schools to avoid losing fundings under school accountability, as the minority subgroups have a higher possibility to fall short of the average academic target [@hanushekraymond_2005_does; @oday_2009_complexity]. Similarly, turning down education fundings for migrant students is also a strategy for Chinese local governments to decrease overall financial stress due to fiscal decentralization [@jinRegionalDecentralizationFiscal2005a; @longFiscalDecentralisationKnowledge2017].
+Scholarship in education funding suggests that students of color have been continuously underfunded by federal and state, and the discrepancy between their and higher-SES/white counterparts’ academic performance persists [@darling-hammond_2004_color; @gaddislauen_2014_school; @lafortuneetal_2018_school; @ryan_1999_schools]. In China, researchers found similar patterns and disparities among migrant students and local-*Hukou* students. Evidence from China Education Paney survey indicates that local students outperform migrant students at higher quantile point, and increasing total education expenditure is likely shrink the academic achievement gap [@fangStudyOutcomeEquity2024]. However, the association between other aspects of education expenditure (e.g. per student funding, central and local government appropriation ratio) and local-migrant academic outcome equity requires further exploration, as most studies center on how funding expands spatial education inequity rather than disparities between different *Hukou* statuses in cities [@weiAnalysisReportUrbanrural2022].
+
+## Fiscal Decentralization and Descriminatory Policies against Internal Migrants
+
+Beyond education finance disparities, education policies also differ for migrant and local students in many provinces, which means students without local registration (*hukou*) may have no government subsidies or face different charging standards. Researchers refer this phenomenon as deflecting internal migrants’ demands and using education to control urban population influx [@chanPhantomServicesDeflecting2019; @friedmanBiopoliticsUrbanizationChina2018]. The disadvantage encountered by migran students varies in different city scenarios: if local education policy background is more *Hukou*-based discriminatory, then migrant students are more likely to receive lower school performance than local students [@maMigrantStatusSchool2020]. Deflecting education resources away from the underprivileged students occurs in U.S. schools to avoid losing fundings under school accountability, as the minority subgroups have a higher possibility to fall short of the average academic target [@hanushekraymond_2005_does; @oday_2009_complexity]. Similarly, turning down education fundings for migrant students is also a strategy for Chinese local governments to decrease overall financial stress due to fiscal decentralization [@jinRegionalDecentralizationFiscal2005a; @longFiscalDecentralisationKnowledge2017].
 
 As migrant students represent social minorities with limited or without *Hukou*-related rights in urban spaces, exploring their education achievements influenced by government funding and financial supports can demonstrate the dynamic and diverse efficiency of providing public services, offering empirical evidence for the development of decentralization theory [@oates_2008_evolution; @oatesSecondGenerationTheoryFiscal2005].
 
+# Data and Methods
 
-# Methods
+## Data 
+In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](). CEPS is conducted by National Survey
+Research Center at Renmin University of China and it is the most used dataset in studies
+of Chinese internal migrant students. Data includes 1769 migrant students and 7960 non- migrant students who have valid information of migrant status in two phases of survey. We will merge datasets based on student, class, and school id, and remove values
+without valid information of hukou status.
+```{r}
+#| label: data-cleaning
 
+library(haven) #to import STATA files
+
+## import w2 data 
+w2.st <- read_dta("./cepsw2data/cepsw2studentEN.dta")
+w2.st.orig <- w2.st
+
+## import w2 school data (principle data)
+w2.pr <- read_dta("./cepsw2data/cepsw2principalEN.dta")
+w2.pr.orig <- w2.pr
+
+## import w2 parents data
+w2.pa <- read_dta("./cepsw2data/cepsw2parentEN.dta")
+w2.pa.orig <- w2.pa
+
+# wrangling data
+## merge w2 parent data with w2 student data
+w2.st.pa <- w2.st.orig %>%
+  left_join(w2.pa.orig, by = c("ids", "clsids", "w2clsids", "schids", "ctyids"))
+
+## merge w2 school data with `w2.st.pa`
+w2.join <- w2.pr.orig %>%
+  left_join(w2.st.pa, by = c("schids", "ctyids"))
+
+## select variables that account
+w2.cleaned<- w2.join %>% 
+  ## rename variables
+  rename(## migrant status
+         mig_status = w2a01, 
+         ## school data
+         per_st_funding = w2pla15, ## per student funding
+         mig_funding = w2pla16, ## migrant student funding
+         centgov_fund_pct= w2pla1701, ## central government funding percentage
+         prefgov_fund_pct = w2pla1702, ## prefectural government funding percentage
+         countgov_fund_pct = w2pla1703, ## county government funding percentage
+         stucharge_pct = w2pla1704, ## student charging percentage
+         same_charge_std = w2pld0200, ## same charging standard
+         mig_subsidy = w2pld0405, ## whether migrant student are covered with subsidy
+         ## parent data
+         mig_locsch_access = w2bc07, ## can migrant students apply for local schools
+         mig_locsch_require = w2bc0800, ## if so, what are the special requirements
+         fam_fin = w2be23, ## family financial status-SES indicator
+         fam_edu = w2be08, ## family education status-SES indicator
+         fam_ocp = w2be09 ## family occupation status-SES indicator
+  ) %>%
+  mutate(
+    # calculate the percentage of chinese, math, and english scores
+    # in this way, when comparing the scores of migrant and non-migrant students, the outcome is standardized using percentage rather than raw score.
+    w2chnpct = w2chn/w2upchn,
+    w2matpct = w2mat/w2upmat,
+    w2engpct = w2eng/w2upeng
+  ) %>%
+  ## select variables of interests
+  select(
+  ids, clsids, w2clsids, schids, ctyids, mig_status, w2chnpct, w2matpct, w2engpct, 
+  per_st_funding, mig_funding, centgov_fund_pct, prefgov_fund_pct, countgov_fund_pct, stucharge_pct, 
+  same_charge_std, mig_subsidy, mig_locsch_access, mig_locsch_require, fam_fin, fam_edu, fam_ocp
+  )
+
+# write out the dataframe
+write_csv(w2.cleaned, "w2-cleaned.csv")
+
+```
+
+
+## Measures
+
+
+## Methods
 
 
 # Analysis Results
 
+
 # Conclusion
+
 
 \clearpage
 # References
