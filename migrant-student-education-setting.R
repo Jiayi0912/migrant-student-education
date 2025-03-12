@@ -27,20 +27,12 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
   numeric_cols <- sapply(results, is.numeric)  
   results[numeric_cols] <- round(results[numeric_cols], 3)
   
-  # compute a flextable
-  ft <- flextable(results)
+  kable_table <- results %>%
+    kable(align = "c") %>%
+    kable_styling(font_size = 10, full_width = FALSE, bootstrap_options = c("striped", "hover", "scale_down")) %>%
+    column_spec(1, bold = TRUE) %>%  # bolden the first column
+    kableExtra::add_footnote("Note: P-values are rounded to three decimal places.", notation = "symbol")
   
-  # set column names
-  ft <- set_header_labels(ft,
-                          term = "Term",
-                          estimate = "Estimate",
-                          std.error = "Std. Error",
-                          statistic = "T.Value",
-                          p.value = "P.Value")
-  
-  # arrange the table width
-  ft <- autofit(ft)
-  
-  # return flextable
-  return(ft)
+  return(kable_table)
+
 }
