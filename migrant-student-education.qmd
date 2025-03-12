@@ -69,7 +69,6 @@ library(papaja)
 library(flextable)
 library(ftExtra)
 library(knitr)
-library(broom)
 library(MASS) #robust regressions
 library(knitr) #to use kable
 library(estimatr) #to use lm_robust
@@ -224,8 +223,6 @@ write_csv(w2clean, "w2-cleaned.csv")
 ## Data 
 In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 
-
-
 ## Measures
 The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Additionally, migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
 <!--  here's a figure (histogram) -->
@@ -264,12 +261,33 @@ ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
 
 ```
 
-As for the independent variable, we take three aspects into account: the amount of per-student funding and subsidies; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
+As for the independent variable, we take three aspects into account: the amount of per-student funding; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
 
 ## Methods
 
+We employ a **Multilevel Model (MLM)** to see the effect of independent variables on the academic performance gap between migrant students and local students. Since migrant students and local students are clustered in different schools, MLM can provide a hierarchical model fitness that can take cluster effect into account [@antonoplisStudyingSocioeconomicStatus2023].
+We will implement random intercept, fixed slope model to examine the research question primarily. When analyzing data in later procedures, MLM can be adjusted with improvement in significance tests and improvement in fit. The two-level model can be put in an incorporated formula:
+$$ 
+examscore_{ij}= \beta_0 + \beta_1 \cdot mig\_status + \beta_2 \cdot centgov\_fund\_pct_j + \beta_3 \cdot prefgov\_fund\_pct_j + \beta_4 \cdot countgov\_fund\_pct_j \\
++ \beta_5 \cdot per\_st\_funding_j + \beta_6 \cdot mig\_funding_j + \beta_7 \cdot same\_charge\_std_j + \beta_8 \cdot mig\_subsidy_j \\
++ \beta_9 \cdot (mig\_status_{ij} \times centgov\_fund\_pct_j) + \beta_{10} \cdot (mig\_status_{ij} \times prefgov\_fund\_pct_j)\\
++ \beta_{11} \cdot (mig\_status_{ij} \times countgov\_fund\_pct_j) + \beta_{12} \cdot (mig\_status_{ij} \times per\_st\_funding_j)\\
++ \beta_{13} \cdot (mig\_status_{ij} \times mig\_funding_j) + \beta_{14} \cdot (mig\_status_{ij} \times same\_charge\_std_j)\\
++ \beta_{15} \cdot (mig\_status_{ij} \times mig\_subsidy_j) + u_j + \epsilon_{ij}
+$$
+In this funtion, we denote *i* as the individual student and *j* as the school. The estimate for the fixed effect are as follows: (1) $\beta_0$ is the overall intercept; (2) $\beta_1$ stands for the effect of being a migrant student; (3) $\beta_2$ to $\beta_8$ extimate the effects of independent variables; (4) $\beta_9$ to $\beta_15$ extimate the interaction effects of independent variables and migrant status; (5) $u_j$ is the random intercept for school *j*; and (6) $\epsilon_{ij}$ represents the residual error.
 
 # Analysis Results
+```{r}
+#| label: tbl
+#| tbl-cap:
+
+library(broom) # for formatted tables
+
+
+
+  
+```
 
 
 # Conclusion
