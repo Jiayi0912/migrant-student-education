@@ -211,6 +211,20 @@ Zou, MA Program in the Social Sciences, University of Chicago, 1155 E
 
 
 
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -460,11 +474,11 @@ scores appeared in migrant student group than their local counterparts,
 suggesting migrant students might experience greater difficulty in
 achieveing in Chinese exams.
 
-\begin{figure}[H]
+\begin{figure}
 
 \caption{\label{fig-box-academic-performance}Comparison of the
-Distribution of Chinese, Mathematics, and English Exam Scores between
-Local Students and Migrant Students}
+distribution of Chinese, Mathematics, and English exam scores (Migrant
+vs.~Local students)}
 
 \centering{
 
@@ -475,15 +489,223 @@ Local Students and Migrant Students}
 \end{figure}%
 
 As for the independent variable, we take three aspects into account: the
-amount of per-student funding and subsidies; the proportion of funding
-sources, which is seperated into central/provincial level and
-county/district level; and whether migrant students enjoy the equal
-funding, subsidies, and charging standards as locally-registered
-students do.
+amount of per-student funding; the proportion of funding sources, which
+is seperated into central/provincial level and county/district level;
+and whether migrant students enjoy the equal funding, subsidies, and
+charging standards as locally-registered students do.
+
+\begin{table}
+
+{\caption{{}{\label{tbl-ttest-two-sample-perfunding}}}
+\vspace{-20pt}}
+
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}{lrrrrr}
+\toprule
+  & Statistic (t) & df & P-value & Mean (Local students) & Mean (Migrant students)\\
+\midrule
+t & -11.6108 & 2369.945 & 0 & 1044.407 & 1280.291\\
+\bottomrule
+\end{tabular}}
+
+\end{table}
 
 \subsection{Methods}\label{methods}
 
+We employ a \textbf{Multilevel Model (MLM)} to see the effect of
+independent variables on the academic performance gap between migrant
+students and local students. Since migrant students and local students
+are clustered in different schools, MLM can provide a hierarchical model
+fitness that can take cluster effect into account
+(\citeproc{ref-antonoplisStudyingSocioeconomicStatus2023}{Antonoplis,
+2023}). We will implement random intercept, fixed slope model to examine
+the research question primarily. When analyzing data in later
+procedures, MLM can be adjusted with improvement in significance tests
+and improvement in fit. The two-level model can be put in an
+incorporated formula:
+
+\[ examscore_{ij}= \beta_0 + \beta_1 \cdot mig\_status + \beta_2 \cdot centgov\_fund\_pct_j + \beta_3 \cdot prefgov\_fund\_pct_j \]
+\[+\beta_4 \cdot countgov\_fund\_pct_j + \beta_5 \cdot per\_st\_funding_j + \beta_6 \cdot mig\_funding_j + \beta_7 \cdot same\_charge\_std_j\]
+\[ + \beta_8 \cdot mig\_subsidy_j  + \beta_9 \cdot (mig\_status_{ij} \times centgov\_fund\_pct_j) \]
+\[ + \beta_{10} \cdot (mig\_status_{ij} \times prefgov\_fund\_pct_j) + \beta_{11} \cdot (mig\_status_{ij} \times countgov\_fund\_pct_j) \]
+\[ + \beta_{12} \cdot (mig\_status_{ij} \times per\_st\_funding_j)  + \beta_{13} \cdot (mig\_status_{ij} \times mig\_funding_j) \]
+\[ + \beta_{14} \cdot (mig\_status_{ij} \times same\_charge\_std_j)  + \beta_{15} \cdot (mig\_status_{ij} \times mig\_subsidy_j) + u_j + \epsilon_{ij} \]
+In this funtion, we denote \emph{i} as the individual student and
+\emph{j} as the school. The estimate for the fixed effect are as
+follows: (1) \(\beta_0\) is the overall intercept; (2) \(\beta_1\)
+stands for the effect of being a migrant student; (3) \(\beta_2\) to
+\(\beta_8\) extimate the effects of independent variables; (4)
+\(\beta_9\) to \(\beta_15\) extimate the interaction effects of
+independent variables and migrant status; (5) \(u_j\) is the random
+intercept for school \emph{j}; and (6) \(\epsilon_{ij}\) represents the
+residual error.
+
 \section{Analysis Results}\label{analysis-results}
+
+\begin{figure}
+
+\caption{\label{fig-ggplot-chinese}The linear relation between
+per-student funding and average Chinese exam scores across two student
+groups}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{migrant-student-education_files/figure-pdf/fig-ggplot-chinese-1.pdf}}
+
+}
+
+\end{figure}%
+
+\begin{table}
+
+{\caption{{The effect of education funding on average Chinese exam
+scores differences within
+schools}{\label{tbl-chinese-achivement-comparison}}}
+\vspace{-20pt}}
+
+\begingroup\fontsize{10}{12}\selectfont
+
+\begin{longtable*}[t]{>{}cccccc}
+\toprule
+term & Estimate & Std. Error & df & t value & p.value\\
+\midrule
+\textbf{(Intercept)} & 61.576 & 3.582 & 119.001 & 17.193 & 0.000\\
+\textbf{mig\_status2} & 3.806 & 1.801 & 9491.442 & 2.113 & 0.035\\
+\textbf{per\_st\_funding} & 0.003 & 0.001 & 113.648 & 2.828 & 0.006\\
+\textbf{centgov\_fund\_pct} & -0.017 & 0.030 & 137.953 & -0.578 & 0.564\\
+\textbf{prefgov\_fund\_pct} & -0.036 & 0.034 & 165.192 & -1.079 & 0.282\\
+\addlinespace
+\textbf{countgov\_fund\_pct} & 0.014 & 0.026 & 157.789 & 0.542 & 0.589\\
+\textbf{mig\_funding2} & 1.463 & 9.566 & 96.829 & 0.153 & 0.879\\
+\textbf{mig\_funding3} & 0.945 & 3.386 & 102.311 & 0.279 & 0.781\\
+\textbf{mig\_funding4} & 4.872 & 2.648 & 100.764 & 1.840 & 0.069\\
+\textbf{mig\_fundingmissing} & 3.373 & 3.687 & 98.670 & 0.915 & 0.362\\
+\addlinespace
+\textbf{same\_charge\_std1} & 3.192 & 2.578 & 100.672 & 1.238 & 0.219\\
+\textbf{same\_charge\_stdmissing} & -3.248 & 4.379 & 100.761 & -0.742 & 0.460\\
+\textbf{mig\_subsidy1} & -1.194 & 4.799 & 98.712 & -0.249 & 0.804\\
+\textbf{mig\_subsidymissing} & 3.268 & 4.482 & 101.070 & 0.729 & 0.468\\
+\textbf{mig\_status2:per\_st\_funding} & 0.000 & 0.001 & 9697.198 & -0.859 & 0.390\\
+\addlinespace
+\textbf{mig\_status2:centgov\_fund\_pct} & -0.018 & 0.017 & 8222.243 & -1.080 & 0.280\\
+\textbf{mig\_status2:prefgov\_fund\_pct} & -0.022 & 0.015 & 7063.107 & -1.464 & 0.143\\
+\textbf{mig\_status2:countgov\_fund\_pct} & -0.001 & 0.015 & 4101.584 & -0.059 & 0.953\\
+\textbf{mig\_status2:mig\_funding2} & -3.368 & 4.829 & 9650.535 & -0.698 & 0.486\\
+\textbf{mig\_status2:mig\_funding3} & -0.226 & 1.428 & 9682.045 & -0.158 & 0.874\\
+\addlinespace
+\textbf{mig\_status2:mig\_funding4} & -4.285 & 1.226 & 9699.225 & -3.494 & 0.000\\
+\textbf{mig\_status2:mig\_fundingmissing} & -1.187 & 1.292 & 9632.857 & -0.919 & 0.358\\
+\textbf{mig\_status2:same\_charge\_std1} & -1.469 & 1.177 & 9679.108 & -1.248 & 0.212\\
+\textbf{mig\_status2:same\_charge\_stdmissing} & 3.088 & 1.735 & 9702.955 & 1.780 & 0.075\\
+\textbf{mig\_status2:mig\_subsidy1} & -0.590 & 2.302 & 9689.675 & -0.256 & 0.798\\
+\addlinespace
+\textbf{mig\_status2:mig\_subsidymissing} & -3.839 & 2.172 & 9546.821 & -1.767 & 0.077\\
+\bottomrule
+\end{longtable*}
+\endgroup{}
+
+\end{table}
+
+\begin{table}
+
+{\caption{{The effect of education funding on average Mathematics exam
+scores differences within
+schools}{\label{tbl-math-achivement-comparison}}}
+\vspace{-20pt}}
+
+\begingroup\fontsize{10}{12}\selectfont
+
+\begin{longtable*}[t]{>{}cccccc}
+\toprule
+term & Estimate & Std. Error & df & t value & p.value\\
+\midrule
+\textbf{(Intercept)} & 53.626 & 5.159 & 115.555 & 10.394 & 0.000\\
+\textbf{mig\_status2} & 0.865 & 3.269 & 9466.250 & 0.265 & 0.791\\
+\textbf{per\_st\_funding} & 0.007 & 0.002 & 112.174 & 4.280 & 0.000\\
+\textbf{centgov\_fund\_pct} & -0.029 & 0.044 & 123.893 & -0.671 & 0.504\\
+\textbf{prefgov\_fund\_pct} & -0.090 & 0.050 & 142.108 & -1.803 & 0.074\\
+\addlinespace
+\textbf{countgov\_fund\_pct} & -0.014 & 0.039 & 135.688 & -0.357 & 0.722\\
+\textbf{mig\_funding2} & 13.397 & 13.458 & 96.793 & 0.995 & 0.322\\
+\textbf{mig\_funding3} & 3.670 & 4.805 & 104.988 & 0.764 & 0.447\\
+\textbf{mig\_funding4} & 4.472 & 3.745 & 101.323 & 1.194 & 0.235\\
+\textbf{mig\_fundingmissing} & 6.086 & 5.203 & 99.880 & 1.170 & 0.245\\
+\addlinespace
+\textbf{same\_charge\_std1} & 4.709 & 3.650 & 102.782 & 1.290 & 0.200\\
+\textbf{same\_charge\_stdmissing} & -1.444 & 6.199 & 102.857 & -0.233 & 0.816\\
+\textbf{mig\_subsidy1} & -4.189 & 6.774 & 100.061 & -0.618 & 0.538\\
+\textbf{mig\_subsidymissing} & 5.546 & 6.351 & 103.917 & 0.873 & 0.385\\
+\textbf{mig\_status2:per\_st\_funding} & 0.001 & 0.001 & 9701.457 & 1.054 & 0.292\\
+\addlinespace
+\textbf{mig\_status2:centgov\_fund\_pct} & -0.006 & 0.030 & 8670.598 & -0.213 & 0.831\\
+\textbf{mig\_status2:prefgov\_fund\_pct} & -0.016 & 0.027 & 7798.592 & -0.589 & 0.556\\
+\textbf{mig\_status2:countgov\_fund\_pct} & -0.005 & 0.026 & 5005.892 & -0.207 & 0.836\\
+\textbf{mig\_status2:mig\_funding2} & -15.439 & 8.816 & 9646.822 & -1.751 & 0.080\\
+\textbf{mig\_status2:mig\_funding3} & -2.507 & 2.597 & 9572.566 & -0.966 & 0.334\\
+\addlinespace
+\textbf{mig\_status2:mig\_funding4} & -3.857 & 2.234 & 9697.296 & -1.726 & 0.084\\
+\textbf{mig\_status2:mig\_fundingmissing} & -0.627 & 2.349 & 9669.096 & -0.267 & 0.790\\
+\textbf{mig\_status2:same\_charge\_std1} & 0.057 & 2.141 & 9663.886 & 0.027 & 0.979\\
+\textbf{mig\_status2:same\_charge\_stdmissing} & 7.233 & 3.160 & 9702.243 & 2.288 & 0.022\\
+\textbf{mig\_status2:mig\_subsidy1} & 0.523 & 4.186 & 9575.585 & 0.125 & 0.901\\
+\addlinespace
+\textbf{mig\_status2:mig\_subsidymissing} & -8.362 & 3.944 & 9511.590 & -2.120 & 0.034\\
+\bottomrule
+\end{longtable*}
+\endgroup{}
+
+\end{table}
+
+\begin{table}
+
+{\caption{{The effect of education funding on average English exam
+scores differences within
+schools}{\label{tbl-english-achivement-comparison}}}
+\vspace{-20pt}}
+
+\begingroup\fontsize{10}{12}\selectfont
+
+\begin{longtable*}[t]{>{}cccccc}
+\toprule
+term & Estimate & Std. Error & df & t value & p.value\\
+\midrule
+\textbf{(Intercept)} & 47.440 & 5.287 & 118.517 & 8.973 & 0.000\\
+\textbf{mig\_status2} & 1.523 & 2.919 & 9490.931 & 0.522 & 0.602\\
+\textbf{per\_st\_funding} & 0.008 & 0.002 & 113.803 & 4.466 & 0.000\\
+\textbf{centgov\_fund\_pct} & -0.045 & 0.045 & 132.647 & -1.010 & 0.314\\
+\textbf{prefgov\_fund\_pct} & -0.037 & 0.050 & 155.902 & -0.726 & 0.469\\
+\addlinespace
+\textbf{countgov\_fund\_pct} & 0.021 & 0.040 & 148.610 & 0.521 & 0.603\\
+\textbf{mig\_funding2} & -1.239 & 13.981 & 97.859 & -0.089 & 0.930\\
+\textbf{mig\_funding3} & 5.468 & 4.965 & 104.331 & 1.101 & 0.273\\
+\textbf{mig\_funding4} & 3.586 & 3.878 & 102.025 & 0.925 & 0.357\\
+\textbf{mig\_fundingmissing} & 5.143 & 5.394 & 100.155 & 0.953 & 0.343\\
+\addlinespace
+\textbf{same\_charge\_std1} & 6.135 & 3.776 & 102.494 & 1.625 & 0.107\\
+\textbf{same\_charge\_stdmissing} & 0.696 & 6.414 & 102.567 & 0.108 & 0.914\\
+\textbf{mig\_subsidy1} & 0.289 & 7.022 & 100.258 & 0.041 & 0.967\\
+\textbf{mig\_subsidymissing} & 13.336 & 6.567 & 103.177 & 2.031 & 0.045\\
+\textbf{mig\_status2:per\_st\_funding} & 0.000 & 0.001 & 9701.670 & 0.165 & 0.869\\
+\addlinespace
+\textbf{mig\_status2:centgov\_fund\_pct} & -0.028 & 0.027 & 8415.033 & -1.059 & 0.289\\
+\textbf{mig\_status2:prefgov\_fund\_pct} & -0.028 & 0.025 & 7407.079 & -1.143 & 0.253\\
+\textbf{mig\_status2:countgov\_fund\_pct} & 0.000 & 0.023 & 4443.649 & -0.002 & 0.999\\
+\textbf{mig\_status2:mig\_funding2} & -5.058 & 7.844 & 9649.350 & -0.645 & 0.519\\
+\textbf{mig\_status2:mig\_funding3} & -2.131 & 2.316 & 9655.448 & -0.920 & 0.358\\
+\addlinespace
+\textbf{mig\_status2:mig\_funding4} & -3.902 & 1.991 & 9702.788 & -1.961 & 0.050\\
+\textbf{mig\_status2:mig\_fundingmissing} & 0.197 & 2.095 & 9652.163 & 0.094 & 0.925\\
+\textbf{mig\_status2:same\_charge\_std1} & -0.842 & 1.909 & 9676.482 & -0.441 & 0.659\\
+\textbf{mig\_status2:same\_charge\_stdmissing} & 3.193 & 2.815 & 9702.920 & 1.134 & 0.257\\
+\textbf{mig\_status2:mig\_subsidy1} & -3.508 & 3.734 & 9664.035 & -0.940 & 0.347\\
+\addlinespace
+\textbf{mig\_status2:mig\_subsidymissing} & -7.679 & 3.521 & 9542.046 & -2.181 & 0.029\\
+\bottomrule
+\end{longtable*}
+\endgroup{}
+
+\end{table}
 
 \section{Conclusion}\label{conclusion}
 
@@ -493,6 +715,12 @@ students do.
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-antonoplisStudyingSocioeconomicStatus2023}
+Antonoplis, S. (2023). Studying {Socioeconomic Status}: {Conceptual
+Problems} and an {Alternative Path Forward}. \emph{Perspectives on
+Psychological Science}, \emph{18}(2), 275--292.
+\url{https://doi.org/10.1177/17456916221093615}
+
 \bibitem[\citeproctext]{ref-baird_2008_federal}
 Baird, K. E. (2008). Federal {Direct Expenditures} and {School Funding
 Disparities}, 1990-2000. \emph{Journal of Education Finance},
