@@ -88,6 +88,8 @@ set.seed(1234)
 # Generate r-references.bib file 
 papaja::r_refs(file = "r-references.bib")
 
+# source setting-up r.script
+source("migrant-student-education-setting.R")
 ```
 
 # Introduction
@@ -118,7 +120,7 @@ As migrant students represent social minorities with limited or without *Hukou*-
 # Data and Methods
 
 ## Data 
-In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes 1769 migrant students and 7960 non- migrant students who have valid information of migrant status in two phases of survey. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
+In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 ```{r}
 #| label: import-data
 #| include: FALSE
@@ -181,10 +183,6 @@ w2.cleaned<- w2.join %>%
   same_charge_std, mig_subsidy, mig_locsch_access, mig_locsch_require, fam_fin, fam_edu, fam_ocp
   ) 
 
-
-# write out the dataframe
-write_csv(w2.cleaned, "w2-cleaned.csv")
-
 ## investigate the structure of the data frame
 
 str(w2.cleaned)
@@ -221,12 +219,46 @@ w2clean <- w2.cleaned %>%
   mutate(across(c(mig_funding, same_charge_std, mig_subsidy), 
                 ~ factor(replace_na(as.character(.), "missing"), levels = c(levels(.), "missing"))))
 
+# write out the dataframe
+write_csv(w2clean, "w2-cleaned.csv")
+
+
 ```
 
 
 ## Measures
-The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In [], a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students.
+The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Additionally, migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
 <!--  here's a figure (histogram) -->
+```{r}
+#| label: fig-box-academic-performance
+#| fig-cap: "Comparison of the Distribution of Chinese, Mathematics, and English Exam Scores between Local Students and Migrant Students"
+
+## Organize the dataframe in to a form better for ggplot function to generate plots
+df_long <- w2clean %>%
+  select(mig_status, w2chnstd, w2matstd, w2engstd) %>%
+  # concert exams scores into a long column named "subject" and "score"
+  pivot_longer(cols = c(w2chnstd, w2matstd, w2engstd), 
+               names_to = "subject", values_to = "score") %>%
+  mutate(subject = recode(subject, 
+                          "w2chnstd" = "Chinese", 
+                          "w2matstd" = "Math", 
+                          "w2engstd" = "English")) %>%
+  # scores more than 100 are defined as outliers
+  filter(score <= 100)
+
+## draw boxplot
+ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
+  geom_boxplot() + 
+  # regulate the scale of y-axis 
+  scale_y_continuous(breaks = seq(0, 100, by = 10)) +
+  # use the palette we defined in rscript
+  scale_fill_manual(values = palette_apa, labels = c("Local", "Migrant")) +
+  labs(x = "Subject", y = "Score", fill = "Student Type") +
+  # use the theme_apa function
+  theme_apa()
+
+```
+
 As for the independent variable, we take three aspects into account: the amount of per-student funding and subsidies; the proportion of funding sources, which is seperated into central/provincial level and county/district level; and whether migrant students enjoy the equal funding, subsidies, and charging standards as locally-registered students do. 
 
 ## Methods
