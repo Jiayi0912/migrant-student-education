@@ -6,19 +6,41 @@ theme_apa <- function(...) papaja::theme_apa(...)
 palette_apa <- c("#56B4E9", "#009E73")
 
 ## define a function that can compute formatted table reporting regression results
-report_reg <- function(model) {
+report_lmer <- function(model, use_lmerTest = TRUE) {
+  # extract results
+  if (use_lmerTest) {
+    # use lmerTest to summary the p.value
+    results <- summary(model)$coefficients
+    results <- as.data.frame(results)
+    colnames(results) <- c("Estimate", "Std. Error", "df", "t value", "p.value")
+    results$term <- rownames(results)  # extract term from rownames
+    rownames(results) <- NULL  # remove rownames
+  } else {
+    # use broom.mixed::tidy to extract the result
+    results <- broom.mixed::tidy(model, effects = "fixed")
+  }
   
-  # Extract coefficients and p-values
-  m_glance <- glance(model)
-  # Format the p-value
-  p_value <- apa_p(m_glance$p.value, add_equals = TRUE)
-  # Create a string with the results
-  report <- paste0("$F$(", 
-                   m_glance$df, 
-                   ", ", m_glance$df.residual, 
-                   ") = ", round(m_glance$statistic, 3), 
-                   ", $p$ = ", p_value, ", $R^2$ = ", round(m_glance$r.squared, 3))
+  # ensure the order of columns
+  results <- results[, c("term", setdiff(names(results), "term"))]
   
-  return(report)    
+  # round numeric columns
+  numeric_cols <- sapply(results, is.numeric)  
+  results[numeric_cols] <- round(results[numeric_cols], 3)
   
+  # compute a flextable
+  ft <- flextable(results)
+  
+  # set column names
+  ft <- set_header_labels(ft,
+                          term = "Term",
+                          estimate = "Estimate",
+                          std.error = "Std. Error",
+                          statistic = "T.Value",
+                          p.value = "P.Value")
+  
+  # arrange the table width
+  ft <- autofit(ft)
+  
+  # return flextable
+  return(ft)
 }
