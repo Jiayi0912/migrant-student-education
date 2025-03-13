@@ -219,13 +219,19 @@ Zou, MA Program in the Social Sciences, University of Chicago, 1155 E
 
 
 
-\usepackage{booktabs}
+\usepackage{fontspec}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{colortbl}
+\usepackage{hhline}
+\newlength\Oldarrayrulewidth
+\newlength\Oldtabcolsep
 \usepackage{longtable}
 \usepackage{array}
-\usepackage{multirow}
-\usepackage{wrapfig}
+\usepackage{hyperref}
 \usepackage{float}
-\usepackage{colortbl}
+\usepackage{wrapfig}
+\usepackage{booktabs}
 \usepackage{pdflscape}
 \usepackage{tabu}
 \usepackage{threeparttable}
@@ -233,12 +239,6 @@ Zou, MA Program in the Social Sciences, University of Chicago, 1155 E
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\usepackage{fontspec}
-\usepackage{multicol}
-\usepackage{hhline}
-\newlength\Oldarrayrulewidth
-\newlength\Oldtabcolsep
-\usepackage{hyperref}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -477,11 +477,79 @@ remove values without valid information of hukou status.
 
 The dependent variable in our study is the academic performance, which
 is measured by three indexes: score (percentage) of Chinese,
-Mathematics, and English exams. In
-Figure~\ref{fig-box-academic-performance}, a primary investigation into
-the follow-up dataset suggests that the medium and average of all three
-test scores for migrant students are all less than the equivalents for
-non-migrant students. Migrant students performances in Chinese and
+Mathematics, and English exams. Table~\ref{tbl-summary-w2clean} shows
+the mean, standardized deviation and number of per-student funding
+categorized by student groups.
+
+\begin{table}
+
+{\caption{{Summary Results of per-student
+funding}{\label{tbl-summary-w2clean}}}
+\vspace{-20pt}}
+
+\global\setlength{\Oldarrayrulewidth}{\arrayrulewidth}
+
+\global\setlength{\Oldtabcolsep}{\tabcolsep}
+
+\setlength{\tabcolsep}{2pt}
+
+\renewcommand*{\arraystretch}{1.5}
+
+
+
+\providecommand{\ascline}[3]{\noalign{\global\arrayrulewidth #1}\arrayrulecolor[HTML]{#2}\cline{#3}}
+
+\begin{longtable*}[c]{|p{0.75in}|p{0.75in}|p{0.75in}|p{0.75in}}
+
+
+
+\ascline{0.75pt}{000000}{1-4}
+
+\multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{Migrant\ status}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{MPG\ (mean)}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{MPG\ (sd)}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{N}}}} \\
+
+\ascline{0.75pt}{000000}{1-4}\endfirsthead 
+
+\ascline{0.75pt}{000000}{1-4}
+
+\multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{Migrant\ status}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{MPG\ (mean)}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{MPG\ (sd)}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{N}}}} \\
+
+\ascline{0.75pt}{000000}{1-4}\endhead
+
+
+
+\multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{1}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{1,044.41}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{675.19}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{7,960}}}} \\
+
+
+
+
+
+\multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{2}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{1,280.29}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{792.98}}}} & \multicolumn{1}{>{\centering}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{22}\selectfont{\global\setmainfont{Times New Roman}{1,769}}}} \\
+
+\ascline{0.75pt}{000000}{1-4}
+
+
+
+\end{longtable*}
+
+
+
+\arrayrulecolor[HTML]{000000}
+
+\global\setlength{\arrayrulewidth}{\Oldarrayrulewidth}
+
+\global\setlength{\tabcolsep}{\Oldtabcolsep}
+
+\renewcommand*{\arraystretch}{1}
+
+{\vspace{-20pt}
+\noindent \emph{Note.} Mean, standardized deviation and number of per\_st\_funding}
+
+\end{table}
+
+In Figure~\ref{fig-box-academic-performance}, a primary investigation
+into the follow-up dataset suggests that the medium and average of all
+three test scores for migrant students are all less than the equivalents
+for non-migrant students. Migrant students performances in Chinese and
 English exams are more concentrated than local students, but possibly
 due to different sample size. More outliers in Chinese exam scores
 appeared in migrant student group than their local counterparts,

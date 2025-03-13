@@ -227,7 +227,35 @@ write_csv(w2clean, "w2-cleaned.csv")
 In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 
 ## Measures
-The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
+The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. @tbl-summary-w2clean shows the mean, standardized deviation and number of per-student funding categorized by student groups.
+```{r}
+#| label: tbl-summary-w2clean
+#| tbl-cap: "Summary Results of per-student funding"
+#| apa-note: Mean, standardized deviation and number of per_st_funding
+
+w2clean %>% 
+    # Simple summary stats
+    group_by(mig_status) %>%
+    summarise(
+        mean_per = mean(per_st_funding),
+        sd_per = sd(per_st_funding),
+        n = n()
+    ) %>%
+    # Rename the column headers
+    rename(
+        "Migrant status" = mig_status,
+        "MPG (mean)" = mean_per,
+        "MPG (sd)" = sd_per,
+        "N" = n
+    ) %>%
+    # Turn into a flextable object
+    flextable() %>% 
+    # Format to APA style
+    flextable::theme_apa()
+
+```
+
+In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
 Additionally, the average Chinese, Mathematics and English exam scores of migrant students are respectively `r mean(w2clean$w2chnstd[w2clean$mig_status==2])`, `r mean(w2clean$w2matstd[w2clean$mig_status==2])`, and `r mean(w2clean$w2engstd[w2clean$mig_status==2])`, which are lower than their local counterparts' academic achievements (`r mean(w2clean$w2chnstd[w2clean$mig_status==1])`, `r mean(w2clean$w2matstd[w2clean$mig_status==1])`, and `r mean(w2clean$w2engstd[w2clean$mig_status==1])`).
 <!--here's a boxplot  -->
 ```{r}
@@ -259,8 +287,7 @@ ggplot(df_long, aes(x = subject, y = score, fill = factor(mig_status))) +
   scale_fill_manual(values = palette_apa, labels = c("Local", "Migrant")) +
   labs(x = "Subject", y = "Score", fill = "Student Type") +
   # use the theme_apa function
-  theme_minimal() +
-  theme_apa()
+  theme_minimal() 
 
 ```
 
