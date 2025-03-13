@@ -20,7 +20,7 @@ author-note:
     related-report: This project is the final assignment for Data to Manuscript in R (D2MR) instructed by Dr. Natalie Dowling. It also serves as an interim result of Jiayi Zou's MA thesis project. 
     # Example: The authors are grateful to [Person] for [Reason].
     gratitude: The author is grateful Dr. Dowling for supporting this project and offering guidance throughout the quarter.
-abstract: "This document is a template demonstrating the apaquarto format. It includes examples of how to create figures and tables, as well as how to reference them in the text. The document is written in Quarto, a system for creating documents with R Markdown. The apaquarto extension provides a template for creating APA7-formatted manuscripts."
+abstract: "Internal migration is an unique social problem for urban governance in China One of the major issue is the underperformance of migrant children in schools, and fiscal decentralization and the Hukou system restricts them from benefiting from the equal level of education finance as their local counterparts do. How governments’ differentiated provision of education fundings affects the academic performance disparity between migrant students and local students in China? Applying multilevel model, we found that after clustering two groups of students by school ids, migrant status can benefit migrant students' performance in Chinese exam, while their academic performance across three subjects can decrease due to excluding enrollment of migrants, lower quota of per-student funding, and missing information in subsidies and fiscal allocation."
 keywords: [education inequality, internal migration, education funding, fiscal decentralization]
 floatsintext: true
 numbered-lines: false
@@ -48,15 +48,13 @@ format:
     toc: true
   apaquarto-pdf:
     documentmode: man
-    include-in-header: 
-      text: |
-        \usepackage{booktabs}
-        \usepackage{longtable}
     keep-tex: true
     list-of-figures: true
     list-of-tables: true
     fig-width: 2
     fig-height: 2
+    tbl-width: 2
+    tbl-height: 2
     out-width: 40%
 ---
 
@@ -74,8 +72,6 @@ library(MASS) #robust regressions
 library(knitr) #to use kable
 library(estimatr) #to use lm_robust
 library(sandwich) #to use lm.cluster
-library(kableExtra)  
-options(kableExtra.latex.load_packages = FALSE)
 
 
 # use the conflicts_prefer function to avoid conflicts
@@ -275,6 +271,8 @@ As for the independent variable, we take three aspects into account: the amount 
 #| tbl-caption: "Two-sample t-test on the mean per-student funding across program types"
 #| tbl-pos: H
 
+library(kableExtra)
+
 # Two-sample t-test of per-student funding by migrant status
 ttest2_per <- t.test(
        filter(w2clean, mig_status == "1")$per_st_funding, # local students
@@ -302,9 +300,7 @@ In @tbl-ttest-two-sample-perfunding, we examined the difference of mean per-stud
 
 We employ a **Multilevel Model (MLM)** to see the effect of independent variables on the academic performance gap between migrant students and local students. Since migrant students and local students are clustered in different schools, MLM can provide a hierarchical model fitness that can take cluster effect into account [@antonoplisStudyingSocioeconomicStatus2023].
 We will implement random intercept, fixed slope model to examine the research question primarily. When analyzing data in later procedures, MLM can be adjusted with improvement in significance tests and improvement in fit. The two-level model can be put in an incorporated formula:
-
 <!-- Forgive me for writing the function so ugly. It's so long and the only way latex won't return error when rendering pdf is to keep it this way -->
-
 $$ examscore_{ij}= \beta_0 + \beta_1 \cdot mig\_status + \beta_2 \cdot centgov\_fund\_pct_j + \beta_3 \cdot prefgov\_fund\_pct_j $$
 $$+\beta_4 \cdot countgov\_fund\_pct_j + \beta_5 \cdot per\_st\_funding_j + \beta_6 \cdot mig\_funding_j + \beta_7 \cdot same\_charge\_std_j$$
 $$ + \beta_8 \cdot mig\_subsidy_j  + \beta_9 \cdot (mig\_status_{ij} \times centgov\_fund\_pct_j) $$
@@ -424,7 +420,11 @@ Lastly, @tbl-english-achievement computes the regression outcome of the funding 
 And when the school does not enroll migrant students, and the information of whether migrant students and local students share the same subsidies is missing, migrant students tend to suffer from a significant negative impact and a lower English exam score than local students (with corresponding estimates of `r round(fixef(model_eng)["mig_status2:mig_funding4"], 3)` and `r round(fixef(model_eng)["mig_status2:mig_subsidymissing"], 3)`.
 
 # Conclusion
+This study examines the impact of differentiated educational funding on the academic performance disparity between migrant and local students in China, within the broader social context of fiscal decentralization and the Hukou system. Using a multilevel modeling approach that accounts for school-level clustering, our findings challenge the conventional assumption that migrant status inherently disadvantages students academically. In the Chinese exam, migrant students demonstrate a significant performance advantage over their local counterparts within the same school. However, across all three subjects (Chinese, Math, and English), educational funding allocation plays a crucial role in shaping academic outcomes.
 
+Specifically, higher per-student funding is consistently associated with improved exam scores, while discrepancies in fiscal allocation, particularly when migrant students receive lower quotas or when key financial information is missing, contribute to their academic disadvantage. The exclusion of migrant students from certain schools further exacerbates disparities, leading to significant negative impacts on their performance. Additionally, a higher proportion of educational funding from the prefecture level is found to negatively affect math achievement, suggesting potential inefficiencies in decentralized funding structures.
+
+These findings highlight the urgent need for policy interventions aimed at ensuring equitable access to educational resources for migrant students. Policymakers should prioritize increasing transparency in fiscal allocations, equalizing per-student funding across student groups, and addressing institutional barriers that restrict migrant students' school enrollment. Addressing these systemic inequalities is essential for fostering a more inclusive and equitable urban education system in China.
 
 \clearpage
 # References
