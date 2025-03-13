@@ -28,9 +28,8 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
   results[numeric_cols] <- round(results[numeric_cols], 3)
   
   kable_table <- results %>%
-    kable(align = "c") %>%
+    kable(align = "c", format = "latex", booktabs = TRUE, longtable = TRUE) %>%
     kable_styling(font_size = 10, full_width = FALSE, bootstrap_options = c("striped", "hover", "scale_down")) %>%
-    column_spec(1, bold = TRUE) %>%  # bolden the first column
     kableExtra::add_footnote("Note: P-values are rounded to three decimal places.", notation = "symbol")
   
   return(kable_table)

@@ -47,12 +47,14 @@ format:
     list-of-tables: true
     toc: true
   apaquarto-pdf:
-    # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
+    include-in-header: 
+      text: |
+        \usepackage{booktabs}
+        \usepackage{longtable}
     keep-tex: true
     list-of-figures: true
     list-of-tables: true
-    # Change default output size of figures unless specified in the chunk
     fig-width: 2
     fig-height: 2
     out-width: 40%
@@ -72,6 +74,8 @@ library(MASS) #robust regressions
 library(knitr) #to use kable
 library(estimatr) #to use lm_robust
 library(sandwich) #to use lm.cluster
+library(kableExtra)  
+options(kableExtra.latex.load_packages = FALSE)
 
 
 # use the conflicts_prefer function to avoid conflicts
@@ -227,7 +231,8 @@ write_csv(w2clean, "w2-cleaned.csv")
 In this project, we use the follow-up (2014-2015) dataset from the China Education Panel Survey [CEPS](http://ceps.ruc.edu.cn/English/Home.htm). CEPS is conducted by National Survey Research Center at Renmin University of China and it is the most used dataset in studies of Chinese internal migrant students. Data includes `r sum(w2clean$mig_status==2)` migrant students and `r sum(w2clean$mig_status==1)` non-migrant students who have were at 9th Grade as in the final year of Junior High. We will merge datasets based on student, class, and school id, and remove values without valid information of hukou status.
 
 ## Measures
-The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Additionally, migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
+The dependent variable in our study is the academic performance, which is measured by three indexes: score (percentage) of Chinese, Mathematics, and English exams. In @fig-box-academic-performance, a primary investigation into the follow-up dataset suggests that the medium and average of all three test scores for migrant students are all less than the equivalents for non-migrant students. Migrant students performances in Chinese and English exams are more concentrated than local students, but possibly due to different sample size. More outliers in Chinese exam scores appeared in migrant student group than their local counterparts, suggesting migrant students might experience greater difficulty in achieveing in Chinese exams.
+Additionally, the average Chinese, Mathematics and English exam scores of migrant students are respectively `r mean(w2clean$w2chnstd[w2clean$mig_status==2])`, `r mean(w2clean$w2matstd[w2clean$mig_status==2])`, and `r mean(w2clean$w2engstd[w2clean$mig_status==2])`, which are lower than their local counterparts' academic achievements (`r mean(w2clean$w2chnstd[w2clean$mig_status==1])`, `r mean(w2clean$w2matstd[w2clean$mig_status==1])`, and `r mean(w2clean$w2engstd[w2clean$mig_status==1])`).
 <!--here's a boxplot  -->
 ```{r}
 #| label: fig-box-academic-performance
@@ -270,8 +275,6 @@ As for the independent variable, we take three aspects into account: the amount 
 #| tbl-caption: "Two-sample t-test on the mean per-student funding across program types"
 #| tbl-pos: H
 
-library(kableExtra)  
-
 # Two-sample t-test of per-student funding by migrant status
 ttest2_per <- t.test(
        filter(w2clean, mig_status == "1")$per_st_funding, # local students
@@ -293,7 +296,7 @@ kable(ttest2_per_df,
           kable_styling(latex_options = "scale_down")
 
 ```
-
+In @tbl-ttest-two-sample-perfunding, we examined the difference of mean per-student funding for local and migrant students. The results indicate that the average per-student funding is significantly different in two student subgroups, with a $p$-value of `r round(ttest2_per$p.value, 3)`. It is worth noticing that the mean funding for each migrant student (`r ttest2_per$estimate[2]`) is higher than the local student's (`r ttest2_per$estimate[1]`), which aligns with the policy guidance from central government in China. The result is also counterintuitive with the reverse comparison of academic achievements in @fig-box-academic-performance. These findings call for further investigation in the the effect of educational funding provision on academic achievement inequality.
 
 ## Methods
 
@@ -301,38 +304,51 @@ We employ a **Multilevel Model (MLM)** to see the effect of independent variable
 We will implement random intercept, fixed slope model to examine the research question primarily. When analyzing data in later procedures, MLM can be adjusted with improvement in significance tests and improvement in fit. The two-level model can be put in an incorporated formula:
 
 <!-- Forgive me for writing the function so ugly. It's so long and the only way latex won't return error when rendering pdf is to keep it this way -->
+
 $$ examscore_{ij}= \beta_0 + \beta_1 \cdot mig\_status + \beta_2 \cdot centgov\_fund\_pct_j + \beta_3 \cdot prefgov\_fund\_pct_j $$
 $$+\beta_4 \cdot countgov\_fund\_pct_j + \beta_5 \cdot per\_st\_funding_j + \beta_6 \cdot mig\_funding_j + \beta_7 \cdot same\_charge\_std_j$$
 $$ + \beta_8 \cdot mig\_subsidy_j  + \beta_9 \cdot (mig\_status_{ij} \times centgov\_fund\_pct_j) $$
 $$ + \beta_{10} \cdot (mig\_status_{ij} \times prefgov\_fund\_pct_j) + \beta_{11} \cdot (mig\_status_{ij} \times countgov\_fund\_pct_j) $$
 $$ + \beta_{12} \cdot (mig\_status_{ij} \times per\_st\_funding_j)  + \beta_{13} \cdot (mig\_status_{ij} \times mig\_funding_j) $$
 $$ + \beta_{14} \cdot (mig\_status_{ij} \times same\_charge\_std_j)  + \beta_{15} \cdot (mig\_status_{ij} \times mig\_subsidy_j) + u_j + \epsilon_{ij} $$
+<!-- End of the ugly formula -->
 In this funtion, we denote *i* as the individual student and *j* as the school. The estimate for the fixed effect are as follows: (1) $\beta_0$ is the overall intercept; (2) $\beta_1$ stands for the effect of being a migrant student; (3) $\beta_2$ to $\beta_8$ extimate the effects of independent variables; (4) $\beta_9$ to $\beta_15$ extimate the interaction effects of independent variables and migrant status; (5) $u_j$ is the random intercept for school *j*; and (6) $\epsilon_{ij}$ represents the residual error.
 
 # Analysis Results
 
+## Linear Relation between Per-student Funding and Academic Achievements 
+
+We first investigated the correlation between per-student funding and exam scores. @fig-ggplot-funding-score shows that the linear relation between per-student funding and academic achievements is positive across student groups and subjects. The estimate for the relation of Chinese exam score with per-student funding is relatively smaller than the other two subjects. However, we cannot observe a significant difference in this relation between local student and migrant student groups.
+
 ```{r}
-#| label: fig-ggplot-chinese
-#| fig-cap: "The linear relation between per-student funding and average Chinese exam scores across two student groups"
+#| label: fig-ggplot-funding-score
+#| fig-cap: "The linear relation between per-student funding and exam scores across two student groups"
 #| fig-width: 6
 #| fig-height: 5
 
+# convert the dataframe into longer version
+w2clean_long <- w2clean %>%
+  pivot_longer(
+    cols = c(w2chnstd, w2matstd, w2engstd),  
+    names_to = "subject",  # store subject of the score
+    values_to = "score"  # store exam score
+  )
 
 # compute geom_smooth with two facets
-ggplot(w2clean, aes(x = per_st_funding, y = w2chnstd, color = factor(mig_status))) +
+ggplot(w2clean_long, aes(x = per_st_funding, y = score, color = factor(mig_status))) +
  
   # plotting points with transparency
   geom_point(alpha = 0.5, size = 0.5 ) +  
   
   # adding black smooth line and "se" to show confidence intervals
   # hide the formula so it won't appear in PDF
-  geom_smooth(method = "lm", se = TRUE, method.args = list(), color = "black", linewidth = 0.5) +  
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.5) +  
   
-  # seperate the plot in two facets (by migrant status)
-  facet_wrap(~ mig_status, labeller = labeller(mig_status = c("1" = "Local Students", "2" = "Migrant Students"))) +  
+  # seperate the plot in two facets (by subject of exam and migrant status)
+  facet_wrap(~ subject + mig_status, labeller = labeller(mig_status = c("1" = "Local Students", "2" = "Migrant Students"), subject = c("w2chnstd" = "Chinese", "w2matstd" = "Math", "w2engstd" = "English"))) +  
   labs(
-    x = "Per-Student Funding (per_st_funding)",
-    y = "Chinese Test Score (w2chnstd)",
+    x = "Per-Student Funding",
+    y = "Exam Score",
     color = "Migrant Status"  # set legend titles
   ) +
   
@@ -347,10 +363,13 @@ ggplot(w2clean, aes(x = per_st_funding, y = w2chnstd, color = factor(mig_status)
     axis.text.x = element_text(angle = 45, hjust = 1)  # rotate the x axises
   )
 ```
+## The Effect of Education Funding on Academic Achievments in Different Student Groups
+
+In this section, we employed the MLM method to estimate the effect of educational funding on the exam scores in three subjects. In the results, the estimate of the migrant status variable `mig_status` represents $\beta_1$, which is the effect of being a migrant student on the overall academic performance. The rest of the estimates are for the independent variables or interaction terms.
 
 ```{r}
-#| label: tbl-chinese-achivement-comparison
-#| tbl-cap: "The effect of education funding on average Chinese exam scores differences within schools"
+#| label: tbl-chinese-achievement
+#| tbl-cap: "The effect of education funding on Chinese exam scores differences within schools"
 #| warning: FALSE
 
 # for formatted tables that can dit multilevel model
@@ -369,12 +388,13 @@ model_chi <- lmer(w2chnstd ~ mig_status + per_st_funding + centgov_fund_pct + pr
 report_lmer(model_chi)
   
 ```
-
+@tbl-chinese-achievement computes the regression outcome of the funding effect on Chinese exam scores, with cluster effect of schools. The estimate for migrant status is `r round(fixef(model_chi)["mig_status2"], 3)`, indicating a significant postive impact on the academic performance in Chinese exam with a $p$-value of `r round(summary(model_chi)$coefficients["mig_status2", "Pr(>|t|)"], 3)`. This finding refutes our previous hypothesis that being a migrant student can negatively influence one's academic performance. Within the same school, migrant students averagely outperform local students in Chinese exam by `r round(fixef(model_chi)["mig_status2"], 3)` with significance.
+The results in the table also suggest that one-unit higher per-student funding can increase the individual's Chinese exam score by `r round(fixef(model_chi)["per_st_funding"], 3)`. The rest of the independent variables including proportion of funding resources and whether migrant students enjoy the equal level of educational finance resources has no significant impact on the academic performance in Chinese exam. However, when the school does not enroll migrant students, and the context of whether migrant students and local students share the same charging standard and subsidies is missing, migrant students tend to suffer from a significant negative impact and a lower Chinese exam score than local students.
 
 
 ```{r}
-#| label: tbl-math-achivement-comparison
-#| tbl-cap: "The effect of education funding on average Mathematics exam scores differences within schools"
+#| label: tbl-math-achievement
+#| tbl-cap: "The effect of education funding on Mathematics exam scores differences within schools"
 #| warning: FALSE
 
 # fit the multilevel model for Chinese scores
@@ -384,9 +404,13 @@ model_mat <- lmer(w2matstd ~ mig_status + per_st_funding + centgov_fund_pct + pr
 report_lmer(model_mat)
 ```
 
+@tbl-math-achievement computes the regression outcome of the funding effect on Math exam scores, with cluster effect of schools. The estimate for migrant status is not significant, but still has a postive impact on the academic performance in Math exam with a $p$-value of `r round(summary(model_mat)$coefficients["mig_status2", "Pr(>|t|)"], 3)`. One-unit higher per-student funding can increase the individual's Math exam score by `r round(fixef(model_mat)["per_st_funding"], 3)`, with a significance of `r round(summary(model_mat)$coefficients["per_st_funding", "Pr(>|t|)"], 3)`. 
+We can also see that the an increase in the proportion of education fiscal appropriation from Prefecture level has a significant negative impact on individual's Math exam score. Similar with what we found in the funding effect on Chinese exam performance, the rest of the independent variables has no significant impact on the academic performance in Math exam. And when the school does not enroll migrant students, and the context of whether migrant students and local students share the same charging standard and subsidies is missing, migrant students tend to suffer from a significant negative impact and a lower Math exam score than local students.
+It is significant that when the quota of fiscal allocation for migrant students is less than that of the local students, the Math exam score of migrant students will drastically decrease by `r round(fixef(model_mat)["mig_status2:mig_funding2"], 3)`, with a $p$-value of `r round(summary(model_mat)$coefficients["mig_status2:mig_funding2", "Pr(>|t|)"], 3)`.
+
 ```{r}
-#| label: tbl-english-achivement-comparison
-#| tbl-cap: "The effect of education funding on average English exam scores differences within schools"
+#| label: tbl-english-achievement
+#| tbl-cap: "The effect of education funding on English exam scores differences within schools"
 #| warning: FALSE
 
 # fit the multilevel model for Chinese scores
@@ -396,6 +420,8 @@ model_eng <- lmer(w2engstd ~ mig_status + per_st_funding + centgov_fund_pct + pr
 report_lmer(model_eng)
 ```
 
+Lastly, @tbl-english-achievement computes the regression outcome of the funding effect on English exam scores, with cluster effect of schools. The estimate for migrant status is not significant. And the finding of per-student funding effect on individual's English exam score is identical with our previous discoveries in @tbl-chinese-achievement and @tbl-math-achievement. Most independent variables has no significant impact on the academic performance in English exam. When the information of whether migrant students enjoy the equal level of subsidies with local students is missing, individual student may increase their English exam score by a `r round(fixef(model_eng)["mig_subsidymissing"], 3)`, with a significance of `r round(summary(model_eng)$coefficients["mig_subsidymissing", "Pr(>|t|)"], 3)`
+And when the school does not enroll migrant students, and the information of whether migrant students and local students share the same subsidies is missing, migrant students tend to suffer from a significant negative impact and a lower English exam score than local students (with corresponding estimates of `r round(fixef(model_eng)["mig_status2:mig_funding4"], 3)` and `r round(fixef(model_eng)["mig_status2:mig_subsidymissing"], 3)`.
 
 # Conclusion
 
