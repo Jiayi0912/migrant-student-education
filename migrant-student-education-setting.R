@@ -1,6 +1,4 @@
 
-## apa theme
-theme_apa <- function(...) papaja::theme_apa(...)
 
 ## define plot palette
 palette_apa <- c("#56B4E9", "#009E73")
@@ -30,6 +28,7 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
   # Use flextable to create a nicely formatted table
   ft <- flextable(results)
   
+  
   # Set column headers
   ft <- set_header_labels(ft,
                           term = "Term",
@@ -40,6 +39,7 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
   
   # Adjust the table width to avoid overflow in PDF, use `opts_pdf` to set row height
   ft <- set_table_properties(ft, layout = "autofit", align = "center", opts_pdf = list(arraystretch = 1))
+  flextable::theme_apa(ft)
 
   # Return the flextable
   return(ft)
