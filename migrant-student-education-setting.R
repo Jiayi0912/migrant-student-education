@@ -12,7 +12,7 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
     # use lmerTest to summary the p.value
     results <- summary(model)$coefficients
     results <- as.data.frame(results)
-    colnames(results) <- c("Estimate", "Std. Error", "df", "t value", "p.value")
+    colnames(results) <- c("Estimate", "Std. Error", "df", "t.value", "p.value")
     results$term <- rownames(results)  # extract term from rownames
     rownames(results) <- NULL  # remove rownames
   } else {
@@ -27,11 +27,20 @@ report_lmer <- function(model, use_lmerTest = TRUE) {
   numeric_cols <- sapply(results, is.numeric)  
   results[numeric_cols] <- round(results[numeric_cols], 3)
   
-  kable_table <- results %>%
-    kable(align = "c", format = "latex", booktabs = TRUE, longtable = TRUE) %>%
-    kable_styling(font_size = 10, full_width = FALSE, bootstrap_options = c("striped", "hover", "scale_down")) %>%
-    kableExtra::add_footnote("Note: P-values are rounded to three decimal places.", notation = "symbol")
+  # Use flextable to create a nicely formatted table
+  ft <- flextable(results)
   
-  return(kable_table)
+  # Set column headers
+  ft <- set_header_labels(ft,
+                          term = "Term",
+                          estimate = "Estimate",
+                          std.error = "Std. Error",
+                          statistic = "T.Value",
+                          p.value = "P.Value")
+  
+  # Adjust the table width to avoid overflow in PDF, use `opts_pdf` to set row height
+  ft <- set_table_properties(ft, layout = "autofit", align = "center", opts_pdf = list(arraystretch = 1))
 
+  # Return the flextable
+  return(ft)
 }
