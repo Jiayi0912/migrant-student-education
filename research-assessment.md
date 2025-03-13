@@ -30,9 +30,9 @@ CNetID: 12434890
 
 Section: MAPSS (political science)
 
-Research project title: Education Funding Inequality and Academic Performance Gap between Migrant and Local Students in China
+Research project title: Education Funding Inequality and Academic Performance Disparity between Migrant and Local Students in China
 
-Submission date: 02/26/2025
+Submission date: 03/12/2025
 
 Submission number (1-4): 2
 
@@ -46,10 +46,14 @@ Filename of knitted .pdf: `migrant-student-education.pdf`
 
 ## AI Statement
 
-Describe whether and how you used AI/LLMs when completing this project: 
+Describe whether and how you used AI/LLMs when completing this project:  
+I did use ChatGpt and DeepSeek for debugging and self-defined function building. Occasionally the Copilot can also work. But most of the codes in the final project did not have a stable pattern, so copilot hardly said anything to me :(
 
 Optionally (for engagement points) reflect on your use of AI:
-
+Surprisingly, AI wasn't very helpful in most of the times. One of the most exhausting moment in this project was when I modified my narrative text several times so that Chatgpt could understand where I was heading. 
+And it can also make mistakes in terms of its "unfamiliar" environment, such as apaquarto. For example I wanted to restrict the outlay of the table with `flextable()` function, but Chatgpt kept telling me to add `width = ` to the code chunk. 
+After using `?set_table_properties` to check the function, I realized that the `width` option was not available when rendering PDF.
+I realize that for programming in R, it is way more better to turn to the official documentation, stackoverflow, or slack for help.
 
 
 ## Overall requirements
@@ -147,7 +151,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1. Uses all three types of operators
     2. Uses multiple operators in data transformation pipelines and/or inline R code
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -196,7 +200,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1. Uses ate least 2 unique `stringr` functions 
     2. Uses `stringr` functions in a data transformation pipeline
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -206,7 +210,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     2. Uses `forcats` functions in a data transformation pipeline
     - NOTE: Though they are base R functions, `factor()` and `levels()` can be used to meet this objective as long as they are used in a way that demonstrates the same skills as `forcats` functions, which should involve including optional arguments
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -217,7 +221,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     1. Creates at least 2 figures with different `geom_*` layers (e.g., a scatter plot and a bar plot)
     2. At least one plot is multi-variable
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -225,7 +229,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
 
     1. Uses at least 2 unique data-mapped `aes()` arguments (e.g., color, shape, size) to group data in a plot in one or multiple plots
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
         
@@ -237,7 +241,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     2. Combines facets with other dynamic grouping aesthetics
       1. If data only includes 1 sensible grouping variable, it may be used for both the faceting and groupin aes.  
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
         
@@ -248,7 +252,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. Variables and labels display in plain English (e.g., "Age (years)" not "child_age_yrs"
     4. Uses at least 1 static aesthetic (e.g., color, shape, size) that improves visual clarity without mapping to data
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -261,7 +265,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. Presents results in narrative text, table, or plot
     - NOTE: This objective may be met with only numeric or non-numeric summaries if they are sufficiently complex (at Dr. Dowling's discretion)
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -272,7 +276,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. Presents results in narrative text, table, or plot
     - NOTE: This objective may be met with only numeric or factor data analyses if they are sufficiently complex (at Dr. Dowling's discretion)
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -283,7 +287,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. Discriminates between informative and non-informative statistics and presents only the former in narrative text
     4. Uses dynamic inline R code to render data-dependent text
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -295,7 +299,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     2. Uses at least 2 citation forms (e.g., (Author, Year), Author (Year), etc.)
     3. May use `cite_r()` to cite R and R packages
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -307,7 +311,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     4. May include R and R package citations with `cite_r()`
     5. May include references not cited in-text
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -320,7 +324,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3.  Follows the "1-chunk-1-thing" rule
     4.  Chunks are distributed throughout the manuscript, sensibly placed near the text they support
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments: 
         
@@ -331,7 +335,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. Sets preferences/options in at least 1 code chunk
     4. Organizes setup chunks sensibly
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
         
@@ -344,7 +348,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     5. References render without error and link to the correct table/figure in pdf/html output
     - NOTE: Ideally your table(s) should be produced in APA7 style, but this is not a strict requirement. At a minimum, they should render as formatted tables (not raw output), have readable and correctly formatted text (e.g., column headers should be capitalized and in plain english, not literal variable names), and the table must be dynamically referenced in the text.
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -356,7 +360,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     4. Results are not displayed as raw R output
     5. Chunks are organized sensibly and appear near the text they support
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -366,7 +370,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     
     1. Includes all necessary metadata, output options, and formatting options necessary to render an APA styled document (or other specified style if appropriate for the project)
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
         
@@ -378,7 +382,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     4. Includes at least 1 footnote
     - NOTE: This is going to be one of the most flexible objectives to demonstrate.  You need to demonstrate a range of markdown skills and use them to make a readable, informative manuscript. Hitting the four points above should do that, but you can use your judgment about what kind of markdown features will best serve your project. No matter what, you should use markdown to follow APA7 guidelines.
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -388,7 +392,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     2. Replaces static text with inline R references in at least 1 character context
     3. Ideally, uses inline R references for *all* data-dependent text
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
 
@@ -396,7 +400,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
 
     1. Uses inline R functions to render at least 3 unique data-dependent text outputs (e.g., performs rounding, calculates means, subtracts one list length from another, etc. -- inline rather than in a code chunk)
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:
         
@@ -407,7 +411,7 @@ Refer to the website for general tips on meeting these objectives and an FAQ.
     3. PDF renders without error and includes all text, tables, and figures
     4. No additional steps are needed (e.g., finding data, determining necessary packages to install and load, running unsourced scripts, correcting aboslute paths)
 
-        -   [ ] Objective attempt
+        -   [x] Objective attempt
         -   [ ] Objective met
         -   Grader comments:        
    
@@ -422,15 +426,26 @@ Optionally (for engagement points) write a brief reflection about your work on t
 - What did you learn from this project that you will carry forward to future projects?
 - What are you most proud of in this project?
 
+The most challenging, rewarding, and proud aspect of my project is that I successfully apply the Multilevel model step by step into the regression code chunks. This is the first time I use MLM model, and establishing the model formula is really difficult for a beginner in intermediate statistics and R programming.
+Finding the appropriate R package `lmerTest` was harder than I expected, because only this package could include the p-value of each estimate. 
+The model is of course far from perfect yet, for I didn't add baseline data and other preexisting variables to control for the confounding effects. I will improve the details in the future.
+If I were to start over, I would not design the `report_lmer()` function to compute the formatted table. It was so time consuming and also annoying when I had to change from `kable()` to `flextable()` (or in reverse) over and over again to render the PDF. 
+
 
 Alternatively/additionally in mind some of the suggested ways to earn engagement points, and expand on this (or other aspects of your project) in your reflection:
 
 - Creating many figures and tables, or particularly complex or creative ones
+I've generated 5 tables and 2 figures in the final project. Figure 2 (with 6 facets!) and Table 3-5 (employing MLM regression) are all quite complicated.
 - Impressively thoughtful and thorough narrative writing in your literature review or discussion section
+I've tried my best to make the lit review and discussion part informative and closely associated with my research question and findings, with academic rigor.
 - Employing sophisticated statistical techniques in your analysis
+Yes! I used MLM model and explained it in the method part.
 - Making excellent use of markdown features to create a polished final product
+The table may not be that published-formatted, but I've added many features to try to mimic the APA style as much as possible.
 - Having a maximally reproducible and dynamic manuscript
+I use relative paths and inline codes for data-dependent text.
 - Fully committing to best practices for version control and GitHub integration/organization
+I did. You can see my frequent commits and informative messages in the repo history.
 
 
 
