@@ -1,10 +1,10 @@
-# Final project: Education funding, subsidies, and academic performance gap between migrant and local students in China
-** Author: Jiayi Zou **
-** Date: 02/26/2025 **
+# Final project: Education Funding Inequality and Academic Performance Disparity between Migrant and Local Students in China
+Author: Jiayi Zou 
+Date: 03/12/2025 
 
 ## Repo purpose 
-This repo is for the *final project* of the course "From Data to Manuscript in R" instructed by Dr. Natalie Dowling.
-The basic structure of this repo includes a .qmd which is the manuscript for the final assignment, several R scripts for data cleaning and wrangling, and data analysis, html and pdf files rendered from the qmd file with apaquarto settings, and a csv file containing clean data for research purpose.
+This repo is for the *final project* of the course D2MR instructed by Dr. Natalie Dowling.
+The basic structure of this repo includes a .qmd which is the manuscript for the final assignment, an R scripts for function and palette setting, and a pdf file rendered from the qmd file with apaquarto format, and a csv file containing clean data for research purpose.
 
 ## Research question
 Internal migration in China has accelerated along with urbanization since the implementation of Reform and Opening Up policy in the early 1980s. Education and sociology research focusing on internal migrant students found that these children have a relatively lower school achievement compared to local students without migrant status, and suffer from academic and financial difficulties, as well as alienation in public education system. 
@@ -19,8 +19,14 @@ Although the dataset is open to public, we save the raw data in the `.gitignore`
 The fully-wrangled data directly related to our research question is stored as `edu_w2.csv` in this folder.
 
 ## Research method
+We use Multilevel Modeling (MLM) to analyze the relationship between education funding inequality and academic performance disparity between migrant and local students in China.
 
 ## Result
+
+Our findings challenge the conventional assumption that migrant status inherently disadvantages students academically. In the Chinese exam, migrant students demonstrate a significant performance advantage over their local counterparts within the same school. However, across all three subjects (Chinese, Math, and English), educational funding allocation plays a crucial role in shaping academic outcomes.
+Specifically, higher per-student funding is consistently associated with improved exam scores, while discrepancies in fiscal allocation, particularly when migrant students receive lower quotas or when key financial information is missing, contribute to their academic disadvantage. The exclusion of migrant students from certain schools further exacerbates disparities, leading to significant negative impacts on their performance. 
+Additionally, a higher proportion of educational funding from the prefecture level is found to negatively affect math achievement, suggesting potential inefficiencies in decentralized funding structures.
+
 
 ## Repo structure
 <!-- TREEVIEW START -->
@@ -29,26 +35,52 @@ The fully-wrangled data directly related to our research question is stored as `
 │   │   ├───bibliography-index
 │   │   ├───ctx
 │   │   ├───explorer-cache
+│   │   ├───jobs
 │   │   ├───pcs
 │   │   ├───presentation
 │   │   ├───profiles-cache
+│   │   ├───quarto-crossref
 │   │   ├───sources
 │   │   │   ├───per
 │   │   │   │   ├───t
 │   │   │   │   └───u
 │   │   │   ├───prop
-│   │   │   └───session-f600810f
+│   │   │   └───session-3e0cda0f
 │   │   ├───tutorial
 │   │   ├───viewer-cache
 │   │   └───viewer_history
 │   └───shared
 │       └───notebooks
+│           └───511F7198-migrant-student-education
+│               └───1
+│                   ├───23B0409B3e0cda0f
+│                   ├───23B0409B6b7da46e
+│                   └───s
+│                       ├───c24nh4kp2ubuk
+│                       ├───c4ngovovgyl71
+│                       ├───c6rmcrqi8dpo6
+│                       ├───clza4e4qddvyx
+│                       ├───csetup_chunk
+│                       ├───cywi9m4c6gxef
+│                       └───lib
+│                           ├───bootstrap-3.3.5
+│                           │   ├───css
+│                           │   │   └───fonts
+│                           │   ├───fonts
+│                           │   ├───js
+│                           │   └───shim
+│                           ├───jquery-3.6.0
+│                           ├───kePrint-0.0.1
+│                           ├───lightable-0.0.1
+│                           └───tabwid-1.1.3
 ├───cepsw1data
 │   └───questionnaire
-└───cepsw2data
-    └───questionnaire
+├───cepsw2data
+│   └───questionnaire
+├───migrant-student-education_files
+│   └───figure-pdf
+└───_extensions
+    └───wjschne
+        └───apaquarto
+            └───typst
 <!-- TREEVIEW END -->
-
-## Project timeline
-1. 02/11/2025 clean data 
-2. 02/26/2025 primary data analysis
