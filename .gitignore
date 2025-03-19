@@ -34,9 +34,7 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 cepsw1data
-cepsw2data
 apaquarto-manuscript.qmd
-_extensions
 r-references.bib
 final-project-migrant.tex
 
